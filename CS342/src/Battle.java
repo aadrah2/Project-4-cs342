@@ -1,3 +1,4 @@
+package src;
 import java.util.Random;
 import java.util.Scanner;
 enum battleType{
@@ -81,7 +82,7 @@ public class Battle {
 		}
 		
 		
-		while(fighter1.alive() && fighter2.alive()) {
+		while(fighter1.alive() && fighter2.alive()) { // shouldn't this be 'or' because the fight ends when one character dies
 			m1=fighter1.decision.getAttack(fighter1);
 			m1=fighter2.decision.getAttack(fighter2);
 			int move1 = evalMove(fighter1,m1, weapon1);
@@ -99,22 +100,22 @@ public class Battle {
 		case Defend:
 			randomNumber = rand.nextInt(25);
 			fighter.addStamina(25);
-			move = -10 - randomNumber;
+			move = -10 - randomNumber; // come back to this
 			return move;
 		case StrongAttack:
 			randomNumber = rand.nextInt(40);
 			fighter.removeStamina(45);
-			move = fighter.returnBaseAttack() + randomNumber + w.getAttack();
+			//move = fighter.returnBaseAttack() + randomNumber + w.getAttack();
 			return move;
 		case MediumAttack:
 			randomNumber = rand.nextInt(25);
 			fighter1.removeStamina(35);
-			move = fighter.returnBaseAttack() + randomNumber+ w.getAttack();;
+			//move = fighter.returnBaseAttack() + randomNumber+ w.getAttack();;
 			return move;
 		case WeakAttack:
 			randomNumber = rand.nextInt(10);
 			fighter.removeStamina(25);
-			move = fighter.returnBaseAttack() + randomNumber + w.getAttack();;
+			//move = fighter.returnBaseAttack() + randomNumber + w.getAttack();;
 			return move;
 		case Run:
 		

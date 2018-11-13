@@ -1,4 +1,7 @@
+package src;
 import java.util.*;
+
+
 
 
 public class Place {
@@ -14,7 +17,8 @@ public class Place {
 	private Map<String,Artifact> artifacts;
 	public static Map<Integer,Place> placesMap = new HashMap<Integer,Place>();
 	public Map<Integer, Character> characters = new HashMap<Integer,Character>();
-	
+	Merchant merchant; // merchant reference as to whether there is a merchant in the place or not
+
 	private static String line;
 	private Scanner lineScanner;
 	
@@ -38,6 +42,8 @@ public class Place {
 	
 	//constructor for initializing variables
 	Place(Scanner infile){
+		 int merchantExists; // when we find out whether the place has a merchant or not we still need to initialize all the other place information
+		 // before passing merchant the place information. The place gets a merchant but also each merchant object gets a place object for which it resides
 		 directions = new ArrayList<Direction>();
 		 artifacts = new HashMap<String,Artifact>();
 		 while(true) {
@@ -50,6 +56,10 @@ public class Place {
 			}
 		lineScanner = new Scanner(line);
 		id=lineScanner.nextInt();
+		//4.1 code
+		merchantExists = lineScanner.nextInt();
+
+		//end 4.1 code
 		name=lineScanner.nextLine();
 		name=name.trim();
 		line = infile.nextLine();
@@ -65,6 +75,13 @@ public class Place {
 		}
 		placesMap.put(id, this);
 		placesVector.add(this);
+		if ( merchantExists == 1) {
+			merchant = new Merchant(this);
+			
+		}
+		else {
+			merchant = null;
+		}
 	}
 	
 	//Getters for each variable
@@ -136,8 +153,25 @@ public class Place {
 		
 	
 	
+	public void notifyMerchant(Character c){
+		if ( c instanceof Player ) {
+			merchant.greet(c);
+		}
+	}
+	Merchant hasMerchant() {
+		if ( merchant == null ) {
+			return null;
+		}
+		else {
+			return merchant;
+		}
+	}
 	
-	
+	public void merchantLocations() {
+		for ( Map.Entry<Integer, Place> entry: placesMap.entrySet() ) {
+			System.out.println(entry.getValue().hasMerchant() );
+		}
+	}
 	
 	//returns random place for artifacts/players to go
 	Place randomPlace() {

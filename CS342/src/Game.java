@@ -1,6 +1,8 @@
-
+package src;
 import java.io.*;
 import java.util.*;
+
+
 
 public class Game {
 
@@ -12,9 +14,11 @@ public class Game {
 	private static String line;
 	private Scanner lineScanner;
 	private int numArtifacts;
+	private int numWeapons;
 	private static Map<Integer,Character> characters= new HashMap<Integer,Character>();
 	//constructor for initialzing variables
-	
+	private static TreeMap<Integer,Currency> currencies= new TreeMap<Integer,Currency>();
+
 	//Clean line function
 	static private String getCleanLine(String scanner) {
 		int findIndex= line.indexOf("//");
@@ -64,6 +68,9 @@ public class Game {
 				 }
 				 continue;
 			 }
+			 
+			 //Place newPlace = new Place();
+			 //newPlace.merchantLocations();
 			 
 			 lineScanner = new Scanner(line);
 			 //reading directions
@@ -124,7 +131,19 @@ public class Game {
 				 continue;
 			 }
 			 
+			 Currency c1 = new Currency("dollar", 100);
+			 int newSize = currencies.size();
+			 currencies.put(newSize, c1 );
 			 
+			 lineScanner = new Scanner(line);
+			 if(fileVersion >= 4.0) {
+				 if(lineScanner.next().equals("WEAPONS")) {
+					 numWeapons = lineScanner.nextInt(); 
+					 for(int i = 0; i < numWeapons; i++) {
+						 new Weapon(infile);
+					 }
+				 }
+			 }
 			 
 		 }
 	}
@@ -133,6 +152,9 @@ public class Game {
 	
 	
 	//prints all places and their ID's
+	public TreeMap<Integer, Currency> getCurrencies(){
+		return currencies;
+	}
 	void print() {
 		int i=0;
 		Place p=new Place();

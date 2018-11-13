@@ -1,4 +1,6 @@
+package src;
 import java.util.*;
+
 
 public class Character {
 	protected int id;
@@ -11,7 +13,8 @@ public class Character {
 	private static Map<Integer,Character> characters= new HashMap<Integer,Character>();
 	protected Map<String, Artifact> artifacts=new HashMap<String, Artifact>();
 	public DecisionMaker decision;
-	
+	Money money;
+
 	//variable stats for battle mode
 	protected int health;
 	private boolean alive;
@@ -74,6 +77,8 @@ public class Character {
 		name=Name;
 		description=Desc;
 		currentRoom=room;
+		money = new Money();
+
 	}
 	
 	//getters
@@ -91,12 +96,19 @@ public class Character {
 	}
 	
 	//adder and remover calls functions for place and artifact as well
-	void addArtifact(Artifact a, String name) {
-		if(a.mobility()>0) {
-			artifacts.put(name, a);
-		}
-		else {
-			System.out.println("This artifact is to heavy to carry.");
+	public void addArtifact(Artifact a) {
+		if ( a != null ) {
+			Match m = new Match();
+			Artifact result = m.contains(a.name(), artifacts); // returns the artifact in inventory which contained was true for
+			if ( result != null ) { // if 
+				result.addCopy(); // increase the number of copies of specified item since it was already contained in the list
+			}
+			else if ( a.mobility() > 0 ) {
+				System.out.println("This artifact is too heavy to carry");
+			}
+			else {
+				artifacts.put(a.name(), a);
+			}
 		}
 		
 	}
@@ -108,6 +120,54 @@ public class Character {
 			a.setCurrentPlace(currentRoom);
 		}
 	}
+	
+	boolean discardArtifactCopies( String name) { // returns false if the artifact is not there, true if it was and got deleted. it also deletes all copies of the artifact
+		if(name!=null) {
+			Artifact res = artifacts.remove(name);
+			if ( res == null ) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else {
+			return false;
+		}
+		
+		
+	}
+
+	public void addMoney(int value){
+		money.addMoney(value);
+	}
+	
+	public boolean pay(int value) {
+		if ( value > money.balance() ) {
+			return false;
+		}
+		money.spendMoney(value);
+		return true;
+	}
+	
+	public boolean balanceSufficient(int value ) { // if value is more than the balance of the player's money, return false. else return true
+		if ( money.balance() < value ) { // if player's balance less than value's they don't have enough moneyh
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	public Artifact hasArtifact(String source) { // returns the artifact for which contains yielded true
+		for ( Map.Entry<String, Artifact> entry: artifacts.entrySet() ) {
+			if ( source.equalsIgnoreCase(entry.getValue().name() ) ) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
+	
 	Artifact getArtifact(String a) {
 		if(artifacts.containsKey(a)) {
 			return artifacts.get(a);
@@ -140,7 +200,7 @@ public class Character {
 	
 	void addHealth(int num) {
 		health+=num;
-		if(health>100) {
+		if(health>100) { // should this be 200
 			health=100;
 		}
 	}
@@ -190,73 +250,80 @@ public class Character {
 	}
 	void makeMove() {
 		Move m = new Move();
-		
-		System.out.println("What move would you like to do for "+ name + ":");
-		Scanner input = new Scanner(System.in);
-		String command  = input.next();
-		
-		m=decision.getMove(this, this.currPlace(), command);
-		//switch case for evaluating move type 
-		switch(m.type) {
+		while ( m.type == null ) 
+		{
+			System.out.println("What move would you like to do for "+ name + ":");
+			Scanner input = new Scanner(System.in);
+			String command  = input.next();
 			
-		case GO :
-			String object= input.next();
-			currentRoom.removeCharacter(id, this);
-			currentRoom=currentRoom.followDirection(object);
-			break;
-			
-		case LOOK:
-			currentRoom.printDirections();
-			makeMove();
-			break;
-			
-		case GET:
-			object = input.next();
-			if(currentRoom.conatinsArtifact(object) ) {
-				addArtifact(currentRoom.returnArtifact(object), object);
-				currentRoom.removeArtifact(object);
-				artifacts.get(object).setCurrentCharacter(this);
-				artifacts.get(object).setCurrentCharacter(null);
-				System.out.println(name + " have picked up " + object);
+			m=decision.getMove(this, this.currPlace(), command);
+			//switch case for evuluating move type 
+			if ( m.type!= null )
+			{
+				switch(m.type) {
+				
+				case GO :
+					String object= input.next();
+					currentRoom.removeCharacter(id, this);
+					currentRoom=currentRoom.followDirection(object);
+					break;
+					
+				case LOOK:
+					currentRoom.printDirections();
+					makeMove();
+					break;
+					
+				case GET:
+					object= input.next();
+					if(currentRoom.conatinsArtifact(object) ) {
+						addArtifact(currentRoom.returnArtifact(object));
+						currentRoom.removeArtifact(object);
+						artifacts.get(object).setCurrentCharacter(this);
+						artifacts.get(object).setCurrentCharacter(null);
+						System.out.println(name + " have picked up " + object);
+					}
+					else {
+						System.out.println("This artifact is not " + name + " this room");
+						makeMove();
+					}
+					break;
+					
+				case DROP:
+					object= input.next();
+					if(currentRoom.conatinsArtifact(object)) {
+						removeArtifact(currentRoom.returnArtifact(object), object);
+						System.out.println(name + " have dropped" + object);
+					}
+					else {
+						System.out.println("This artifact is not in" + name +"inventory");
+						makeMove();
+					}
+					break;
+					
+				case USE:
+					object= input.next();
+					currentRoom.useKey(artifacts.get(object));				
+					System.out.println("All doors unlocked by key have been unlocked");
+					break;
+					
+				case INVENTORY:
+					System.out.println( name + " Inventory: ");
+					printInventory();
+					makeMove();
+					break;
+				case MERCHANT:
+					currentRoom.notifyMerchant(this);
+
+				case NONE:
+					break;
+				default:
+					System.out.println("Not a correct command..");
+					break;
+				}	
 			}
-			else {
-				System.out.println("This artifact is not " + name + " this room");
-				makeMove();
-			}
-			break;
 			
-		case DROP:
-			object= input.next();
-			if(currentRoom.conatinsArtifact(object)) {
-				removeArtifact(currentRoom.returnArtifact(object), object);
-				System.out.println(name + " have dropped" + object);
-			}
-			else {
-				System.out.println("This artifact is not in" + name +"inventory");
-				makeMove();
-			}
-			break;
-			
-		case USE:
-			object= input.next();
-			currentRoom.useKey(artifacts.get(object));				
-			System.out.println("All doors unlocked by key have been unlocked");
-			break;
-			
-		case INVENTORY:
-			System.out.println( name + " Inventory: ");
-			printInventory();
-			makeMove();
-			break;
-		
-		case NONE:
-			break;
-		
-		default:
-			System.out.println("Ending game");
-			System.exit(-3);
-			break;
 		}
+		
 		
 	}
 
@@ -271,6 +338,8 @@ class NPC extends Character{
 		decision = new AI();
 		health=200;
 		baseAttack=30;
+		money = new Money(30);
+
 		
 	}
 	void makeMove() {
@@ -279,7 +348,7 @@ class NPC extends Character{
 		switch(m.type) {
 		case GET:
 			Artifact a = currentRoom.returnArtifact();
-			addArtifact( a, a.name() );
+			addArtifact( a);
 			currentRoom.removeArtifact(a.name());
 			artifacts.get(a.name()).setCurrentCharacter(this);
 			artifacts.get(a.name()).setCurrentCharacter(null);
@@ -312,12 +381,16 @@ class Player extends Character{
 		decision = new UI();
 		health=200;
 		baseAttack=30;
+		money = new Money(100);
+
 	}
 	Player(int ID, String Name, String Desc, Place room){
 		super(ID,Name,Desc,room);
 		decision = new UI();
 		health=200;
 		baseAttack=30;
+		money = new Money(100);
+
 	}
 	
 	
