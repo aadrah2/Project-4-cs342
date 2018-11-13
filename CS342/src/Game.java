@@ -12,6 +12,7 @@ public class Game {
 	private static String line;
 	private Scanner lineScanner;
 	private int numArtifacts;
+	private int numWeapons; 
 	private static Map<Integer,Character> characters= new HashMap<Integer,Character>();
 	//constructor for initialzing variables
 	
@@ -88,7 +89,7 @@ public class Game {
 					 lineScanner=new Scanner(line);
 					 characterType = lineScanner.next();
 					 
-					 if(characterType == "NPC") {
+					 if(characterType.equals("NPC")) {
 						Character c =  new NPC(infile);
 						characters.put(c.id(), c);
 					 }
@@ -124,8 +125,15 @@ public class Game {
 				 continue;
 			 }
 			 
-			 
-			 
+			 lineScanner = new Scanner(line);
+			 if(fileVersion >= 4.0) {
+				 if(lineScanner.next().equals("WEAPONS")) {
+					 numWeapons = lineScanner.nextInt(); 
+					 for(int i = 0; i < numWeapons; i++) {
+						 new Weapon(infile);
+					 }
+				 }
+			 }
 		 }
 	}
 	

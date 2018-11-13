@@ -249,8 +249,51 @@ This beautifully filigreed golden key has "TS" inscribed on it.
 This key is made of finely carved ivory.
 It looks like it took a long time to make.
 
+//WEAPONS
 
+WEAPONS 8 
+-99
+1		35		11		5		Sword
+2
+A large, wide, straight sword made of iron is held by a grip wrapped in ordinary, maroon goat leather.
+One sharp edge makes sure this weapon is great for hacking and slashing.
 
+-99
+2		14		40		Axe
+2
+A fairly big, thin, sharp blade made of titanium is held by a grip wrapped in gilded, jade green salmon leather.
+This sharp, dual-edged axe makes this weapon the best choice for both cleaving and stabbing your enemies with ferocious power.
 
+-99
+3		13		38		Staff
+2
+160 centimeters (62 inches) of solid mangrove wood form the base of this magnificent staff. 
+Rows upon rows of small gems cover the simple, straight staff except for the handle, which has been decorated with small carved runes.
 
+-99
+4		10		32		Mace
+2
+This mace from another time seems to always be whispering secrets to you. 
+Too bad they are in another language.
 
+-99
+5		9		30		Bow and Arrow
+2
+This well-made composite bow has been delicately constructed of excellent ipe wood. 
+Its string is made from pristine hemp, it's a very rare material around these parts of the world.
+
+-99
+6		11		35		Spear
+1
+It is said to be so sharp that a dragonfly landing on the edge would be instantly cut in half.
+
+-99
+7		5		25		Dagger
+2
+A fairly short, slim, jagged blade made of titanium is held by a grip wrapped in dull, royal blue scaled leather.
+With a single, sharp edge this weapon is ideal for both cleaving enemies as well as blocking their attacks.
+
+-99
+8	 	3		15		Rock
+1
+A fairy medium, fairly heavy, sized rock that could be used to bludgeon people with. 

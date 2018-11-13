@@ -12,6 +12,8 @@ public class Artifact {
 	private static String line;
 	private Place currentPlace;
 	private Character currentCharacter;
+	private int attack; 
+	private int defense; 
 	
 	static private String getCleanLine(String scanner) {
 		int findIndex= line.indexOf("//");
@@ -43,8 +45,19 @@ public class Artifact {
 		lineScanner = new Scanner(line);
 		id=lineScanner.nextInt();
 		value =  lineScanner.nextInt();
-		mobility= lineScanner.nextInt();
-		keyPattern= lineScanner.nextInt();
+		//assigning values depending on weapon or artifact
+		if(this instanceof Weapon) {
+			attack = lineScanner.nextInt();
+		}
+		else {
+			mobility= lineScanner.nextInt();
+		}
+		if(this instanceof Weapon) {
+			defense = lineScanner.nextInt();
+		}
+		else {
+			keyPattern= lineScanner.nextInt();
+		}
 		name = lineScanner.nextLine();
 		name=name.trim();
 		
@@ -52,6 +65,12 @@ public class Artifact {
 		line=getCleanLine(line);
 		lineScanner = new Scanner(line);
 		int num= lineScanner.nextInt();
+		if(this instanceof Weapon) {
+			for(int i = 0; i < num; i++) {
+				description += infile.nextLine();
+			}
+			return; 
+		}
 		for(int i=0;i<num; i++) {
 			description+=infile.nextLine();
 		}
@@ -113,5 +132,19 @@ public class Artifact {
 	}
 	void unlockDirection(Direction d) {
 		d.useKey(this);
+	}
+}
+
+class Weapon extends Artifact{
+	Weapon(Scanner infile){
+		super(infile);
+	}
+	
+	public Weapon getWeapon(String s, Character c) {
+		return c.artifacts.get(s); 
+	}
+	
+	public int getAttack(String s, Character c) {
+		return c.artifacts.gets(s).attack; 
 	}
 }
