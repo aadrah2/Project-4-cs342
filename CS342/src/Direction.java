@@ -18,13 +18,13 @@ enum dirType{ N("North", "N"), S("South","S"), E("East", "E"), W("West","W"), U(
 						return true;
 					}
 					return false;
-				}
-			  
+				}		  
 }
 
 enum status{
 	UNLOCKED,LOCKED;
 }
+
 public class Direction {
 	private int id;//direction id
 	private final Place from;//room from
@@ -146,6 +146,7 @@ public class Direction {
 		System.out.println(" id: " + id+ " from: " + from.name() + " to: " + to.name()+ " direction: " + dir + " access: " + access + "\n");
 		}
 	}
+	
 	
 	
 		

@@ -159,4 +159,21 @@ public class Place {
 			directions.get(i).print();
 		}
 	}
+	
+	Direction returnDirection() {
+		int num = rand.nextInt(directions.size());
+		return directions.get(num); 
+	}
+	
+	Artifact returnArtifact() {
+		int num = rand.nextInt(artifacts.size());
+		int i = 0;
+		for(Artifact a : artifacts.values()) {
+			if(num==i) {
+				return a;
+			}
+			i++;
+		}
+		return null;
+	}
 }

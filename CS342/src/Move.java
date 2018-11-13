@@ -1,4 +1,4 @@
-
+import java.lang.Enum;
 
 public class Move {
 	public enum moveType{
@@ -34,7 +34,10 @@ public class Move {
 		}
 		return null;
 	}
-	
+	public moveType returnRandomMove(int num) {
+		moveType[] moves = moveType.values();
+		return moves[num];
+	}
 		
 }
 
