@@ -82,7 +82,7 @@ public class Battle {
 			m1=fighter1.decision.getAttack(fighter1);
 			m2=fighter2.decision.getAttack(fighter2);
 			int move1 = evalMove(fighter1,m1, weapon1);
-		    int move2 = evalMove(fighter1,m2, weapon2);
+		    int move2 = evalMove(fighter2,m2, weapon2);
 		    executeMove(move1,move2);
 			}
 		if(fighter1.alive()) {
@@ -131,9 +131,9 @@ public class Battle {
 	void executeMove(int m1, int m2) {
 		if(m1>0 && m2>0) {
 			fighter1.removeHealth(m2);
-			System.out.println(fighter1.name()+ " has lost" + m2 + " health" );
+			System.out.println(fighter1.name()+ " has lost " + m2 + " health" );
 			fighter2.removeHealth(m1);
-			System.out.println(fighter2.name()+ " has lost" + m1 + " health" );
+			System.out.println(fighter2.name()+ " has lost " + m1 + " health" );
 		}
 		else if(m1<0 && m2>0) {
 			if(m1+m2<=0) {

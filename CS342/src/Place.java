@@ -9,8 +9,8 @@ public class Place {
 	private String name;//name of room
 	private String desc=" ";//description of room
 	private static Vector<Place> placesVector=new Vector<Place>();
-	private ArrayList<Direction> directions;//array of directions leaving room
-	private Map<String,Artifact> artifacts;
+	private ArrayList<Direction> directions = new ArrayList<Direction>();;//array of directions leaving room
+	private Map<String,Artifact> artifacts= new HashMap<String,Artifact>();;
 	public static Map<Integer,Place> placesMap = new HashMap<Integer,Place>();
 	public Map<Integer, Character> characters = new HashMap<Integer,Character>();
 	private Vector<Character> characterVector = new Vector<Character>();
@@ -45,8 +45,6 @@ public class Place {
 		 //int merchantExists; // when we find out whether the place has a merchant or not we still need to initialize all the other place information
 		 // before passing merchant the place information. The place gets a merchant but also each merchant object gets a place object for which it resides
 		 battle=Battle.getBattle();
-		 directions = new ArrayList<Direction>();
-		 artifacts = new HashMap<String,Artifact>();
 		 while(true) {
 				line = infile.nextLine();
 				line=getCleanLine(line);
