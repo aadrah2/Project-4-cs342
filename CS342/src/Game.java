@@ -185,8 +185,8 @@ public class Game {
 		while(true) {
 			for(Character c : characters.values()) {
 				c.makeMove();
-			checkForBattle();
 			}
+			checkForBattle();
 		}
 	}			
 }//end of game

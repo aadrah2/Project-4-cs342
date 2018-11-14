@@ -108,7 +108,7 @@ public class Place {
 	}
 	void addCharacter(int id, Character c) {
 		characters.put(id, c);
-		
+		characterVector.add(c);
 	}
 	
 	//removers
@@ -117,7 +117,7 @@ public class Place {
 	}
 	void removeCharacter(int id, Character c) {
 		characters.remove(id, c);
-		characterVector.add(c);
+		characterVector.remove(c);
 	}
 	void changeMerchant(Merchant m) {
 		merchant=m;

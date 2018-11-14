@@ -274,6 +274,7 @@ public class Character {
 					String object= input.next();
 					currentRoom.removeCharacter(id, this);
 					currentRoom=currentRoom.followDirection(object);
+					currentRoom.addCharacter(id, this);
 					break;
 					
 				case LOOK:
@@ -393,6 +394,7 @@ class NPC extends Character{
 		default:
 			currentRoom.removeCharacter(id, this);
 			currentRoom=currentRoom.returnDirection().follow();
+			currentRoom.addCharacter(id, this);
 		}
 		
 		}
@@ -442,8 +444,9 @@ class UI implements DecisionMaker{
 			  System.out.println(c.name() + " what would you like to do.");
 			  c.printStats();
 			  Scanner input = new Scanner(System.in);
-			  String w = input.next();
-			  if(!Battle.getBattle().getBattletype(w, m)) {
+			  String w = input.nextLine();
+			  m=Battle.getBattle().getBattletype(w, m);
+			  if(m==null) {
 				System.out.println("Invalid battle move");
 				continue;
 			  }

@@ -43,14 +43,14 @@ public class Battle {
 		return battle;
 	}
 	
-	public boolean getBattletype(String a, battleType m) {
+	public battleType getBattletype(String a, battleType m) {
 		for(battleType B: battleType.values()) {
 			if(B.match(a)) {
 				m=B;
-				return true;
+				return m;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	void battle(Character c1, Character c2) {
@@ -79,7 +79,7 @@ public class Battle {
 		
 		while(fighter1.alive() && fighter2.alive()) { // shouldn't this be 'or' because the fight ends when one character dies
 			m1=fighter1.decision.getAttack(fighter1);
-			m1=fighter2.decision.getAttack(fighter2);
+			m2=fighter2.decision.getAttack(fighter2);
 			int move1 = evalMove(fighter1,m1, weapon1);
 		    int move2 = evalMove(fighter1,m2, weapon2);
 		    executeMove(move1,move2);
@@ -98,17 +98,17 @@ public class Battle {
 		case StrongAttack:
 			randomNumber = rand.nextInt(40);
 			fighter.removeStamina(45);
-			//move = fighter.returnBaseAttack() + randomNumber + w.getAttack();
+			move = fighter.returnBaseAttack() + randomNumber ;
 			return move;
 		case MediumAttack:
 			randomNumber = rand.nextInt(25);
 			fighter1.removeStamina(35);
-			//move = fighter.returnBaseAttack() + randomNumber+ w.getAttack();;
+			move = fighter.returnBaseAttack() + randomNumber;
 			return move;
 		case WeakAttack:
 			randomNumber = rand.nextInt(10);
 			fighter.removeStamina(25);
-			//move = fighter.returnBaseAttack() + randomNumber + w.getAttack();;
+			move = fighter.returnBaseAttack() + randomNumber;
 			return move;
 		case Run:
 		
