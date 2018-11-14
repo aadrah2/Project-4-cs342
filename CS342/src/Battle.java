@@ -58,32 +58,41 @@ public class Battle {
 		fighter2=c2;
 		battleType m1 = battleType.Run;
 		battleType m2 = battleType.Run;
+		System.out.println("\nCharacter " + c1.name() + " and Character " + c2.name()+ " have begun battle");
 		
 		System.out.println(fighter1.name() + " what weapon would you like to use.");
 		fighter1.printInventory();
 		Scanner input = new Scanner(System.in);
 		String w = input.next();
-		weapon1=fighter1.getArtifact(w);
+		weapon1=fighter1.getWeapon(w);
 		
 		if(c2 instanceof Player ) {
 		System.out.println(fighter2.name() + " what weapon would you like to use.");
 		fighter2.printInventory();
 		input = new Scanner(System.in);
 		w = input.nextLine();
-		weapon1=fighter2.getArtifact(w);
+		weapon2=fighter2.getWeapon(w);
 		}
 		else {
 			weapon2=fighter2.getLargestWeapon();
 		}
 		
 		
-		while(fighter1.alive() && fighter2.alive()) { // shouldn't this be 'or' because the fight ends when one character dies
+		while(fighter1.alive() && fighter2.alive()) { 
 			m1=fighter1.decision.getAttack(fighter1);
 			m2=fighter2.decision.getAttack(fighter2);
 			int move1 = evalMove(fighter1,m1, weapon1);
 		    int move2 = evalMove(fighter1,m2, weapon2);
 		    executeMove(move1,move2);
 			}
+		if(fighter1.alive()) {
+			System.out.println("Character " + fighter1.name()+ " has won the battle!");
+			fighter2.death();
+		}
+		else{
+			System.out.println("Character " + fighter2.name()+ " has won the battle!");
+			fighter1.death();
+		}
 	}
 		
 	int evalMove(Character fighter, battleType m, Artifact w) {
@@ -93,22 +102,22 @@ public class Battle {
 		case Defend:
 			randomNumber = rand.nextInt(25);
 			fighter.addStamina(25);
-			move = -10 - randomNumber; // come back to this
+			move = -w.getDefense() - randomNumber; // come back to this
 			return move;
 		case StrongAttack:
 			randomNumber = rand.nextInt(40);
 			fighter.removeStamina(45);
-			move = fighter.returnBaseAttack() + randomNumber ;
+			move = fighter.returnBaseAttack() + randomNumber + w.getAttack() ;
 			return move;
 		case MediumAttack:
 			randomNumber = rand.nextInt(25);
 			fighter1.removeStamina(35);
-			move = fighter.returnBaseAttack() + randomNumber;
+			move = fighter.returnBaseAttack() + randomNumber + w.getAttack();
 			return move;
 		case WeakAttack:
 			randomNumber = rand.nextInt(10);
 			fighter.removeStamina(25);
-			move = fighter.returnBaseAttack() + randomNumber;
+			move = fighter.returnBaseAttack() + randomNumber + w.getAttack();
 			return move;
 		case Run:
 		

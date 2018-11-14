@@ -14,14 +14,14 @@ public class Character {
 	protected Map<String, Artifact> artifacts=new HashMap<String, Artifact>();
 	public DecisionMaker decision;
 	Money money;
-	private Vector<Weapon> weaponVector = new Vector<Weapon>(); 
+	private Map<String,Weapon> weapons = new HashMap<String,Weapon>(); 
 	//variable stats for battle mode
 	protected int health;
 	private boolean alive;
 	private int defense;
 	private int stamina;
 	protected int baseAttack;
-	
+	private Weapon fists;
 	
 	
 	static private String getCleanLine(String scanner) {
@@ -40,6 +40,7 @@ public class Character {
 	
 	Character(Scanner infile){
 		Place p = new Place();
+		
 		line = infile.nextLine();
 		lineScanner = new Scanner(line);
 		int roomID=lineScanner.nextInt();
@@ -69,6 +70,8 @@ public class Character {
 		defense=0;
 		stamina=100;
 		characters.put(id,this);
+		fists=new Weapon("fists",baseAttack,defense);
+		weapons.put("fists", fists);
 	}
 
 
@@ -116,6 +119,7 @@ public class Character {
 		if(artifacts.get(name)!=null) {
 			currentRoom.addArtifact(a, name);
 			artifacts.remove(name);
+			weapons.remove(name);
 			a.setCurrentCharacter(null);
 			a.setCurrentPlace(currentRoom);
 		}
@@ -188,12 +192,30 @@ public class Character {
 	boolean alive() {
 		return alive;
 	}
-	
-	
-	
+	void death() {
+		System.out.println("Characeter " + name + " has died and been removed from game");
+		alive=false;
+		currentRoom.removeCharacter(id, this);
+		dropAllArtifacts();
+	}
+	void exit() {
+		alive=false;
+		scatterArtifacts();
+	}
+	void dropAllArtifacts() {
+		for(Artifact a: artifacts.values()) {
+			removeArtifact(a,a.name());
+		}
+	}
+	void scatterArtifacts() {
+		for(Artifact a: artifacts.values()) {
+			a.setCurrentCharacter(null);
+			a.setCurrentPlace(Place.placesMap.get(1).randomPlace());
+		}
+	}
 	void printInventory() {
 		for (Artifact a: artifacts.values()) {
-			System.out.println("Name:" + a.name() + "Description:" + a.description() + "Value:"+ a.value() );
+			System.out.println("Name: " + a.name() + " Description: " + a.description() + " Base Attack: "+ a.getAttack() );
 		}
 	}
 	
@@ -247,16 +269,25 @@ public class Character {
 		}
 		return true;
 	}
-	void addWeapon(Weapon w) {
-		weaponVector.add(w);
+	void addWeapon(String s, Weapon w) {
+		weapons.put(s,w);
+		addArtifact(weapons.get(s));
 	}
-	
+	Weapon getWeapon(String s) {
+		if(weapons.containsKey(s)) {
+			return weapons.get(s);
+		}
+		return weapons.get("fists");
+	}
 	void printStats() {
 		System.out.println("Health: " + health);
 		System.out.println("Defense: " + defense);
 		System.out.println("Stamina: " + stamina);
 	}
 	void makeMove() {
+		if(!alive) {
+			return;
+		}
 		Move m = new Move();
 		while ( m.type == null ) 
 		{
@@ -274,6 +305,10 @@ public class Character {
 					String object= input.next();
 					currentRoom.removeCharacter(id, this);
 					currentRoom=currentRoom.followDirection(object);
+					if(currentRoom==null) {
+						exit();
+						break;
+					}
 					currentRoom.addCharacter(id, this);
 					break;
 					
@@ -335,14 +370,14 @@ public class Character {
 	}
 	
 	public Weapon getLargestWeapon() {
-		int size = weaponVector.size();
+		int size = weapons.size();
 		int index = 0; 
 		int largestValue = 0; 
 		Weapon w = null;
 		while (size > 0) { 
-			if(weaponVector.get(index).getAttack() > largestValue) {
-				largestValue = weaponVector.get(index).getAttack();
-				w = weaponVector.get(index);	
+			if(weapons.get(index).getAttack() > largestValue) {
+				largestValue = weapons.get(index).getAttack();
+				w = weapons.get(index);	
 			}
 			size--; 
 			index++;
@@ -363,6 +398,9 @@ class NPC extends Character{
 		
 	}
 	void makeMove() {
+		if(!this.alive()) {
+			return;
+		}
 		Move m = decision.getMove(this, this.currentRoom, "Random");
 		
 		switch(m.type) {
@@ -374,26 +412,35 @@ class NPC extends Character{
 				artifacts.get(a.name()).setCurrentCharacter(this);
 				artifacts.get(a.name()).setCurrentCharacter(null);
 				System.out.println(this.name() + " has picked up " + a.name());
+				break;
 			}
-			
+			makeMove();
+			break;
 		case DROP:
 			if(emptyBag()) {
 				Artifact A = returnArtifact();
 				removeArtifact(A, A.name());
 				System.out.println(this.name() + " has dropped " + A.name());
+				break;
 			}
-			
+			makeMove();
+			break;
 		case USE:
 			if(emptyBag()) {
 				Artifact b = returnArtifact();
 				currentRoom.useKey(b);
-			}
-							
+				break;
+			}			
 			System.out.println("No doors to unlock");
+			makeMove();
 			break;
 		default:
 			currentRoom.removeCharacter(id, this);
 			currentRoom=currentRoom.returnDirection().follow();
+			if(currentRoom==null) {
+				exit();
+				break;
+			}
 			currentRoom.addCharacter(id, this);
 		}
 		
@@ -410,7 +457,7 @@ class Player extends Character{
 		super(infile);
 		decision = new UI();
 		health=200;
-		baseAttack=30;
+		baseAttack=10;
 		money = new Money(100);
 
 	}

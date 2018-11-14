@@ -111,6 +111,10 @@ public class Direction {
 	//returns to room if door unlocked
 	Place follow() {
 		if(access==status.UNLOCKED ) {
+			if(to.name().equals("Exit")) {
+				System.out.println("You have exited the game");
+				return null;
+			}
 			System.out.println("You are now in room " + to.name());
 			return to;
 		}

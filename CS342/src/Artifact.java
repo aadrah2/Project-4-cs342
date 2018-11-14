@@ -1,5 +1,4 @@
 //manuel torres
-import java.util.Scanner;
 import java.util.*;
 
 public class Artifact {
@@ -16,7 +15,7 @@ public class Artifact {
 	private int numCopies; // number of copies of the named artifact that someone will have 
 	private int attack; 
 	private int defense; 
-	static public Vector<Weapon> weaponVector = new Vector<Weapon>(); 
+	public static Map<String,Weapon> weapons = new HashMap<String,Weapon>(); 
 	private Character currentCharacter;
 	
 	static private String getCleanLine(String scanner) {
@@ -30,6 +29,12 @@ public class Artifact {
 		line=line.substring(0,findIndex);
 		line= line.trim();
 		return line;
+	}
+	Artifact(String Name, int Attack, int Defense){
+			name = Name;
+			attack=Attack;
+			defense=Defense;
+		
 	}
 	public Artifact(Artifact b){
 		name = b.name;
@@ -167,15 +172,19 @@ public class Artifact {
 	public int getAttack() {
 		return attack; 
 	}
-	
+	public int getDefense() {
+		return defense;
+	}
 }
 
 class Weapon extends Artifact{
 	Weapon(Scanner infile){
 		super(infile);
-		weaponVector.add(this);
+		weapons.put(this.name(), this);
 	}
-	
+	Weapon(String Name, int Attack, int Defense){
+		super(Name,Attack,Defense);
+	}
 	//public Weapon getWeapon(String s, Character c) {
 		//return c.artifacts.get(s); 
 	//}

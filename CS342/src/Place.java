@@ -33,6 +33,12 @@ public class Place {
 	Place(){
 		
 	}
+	Place(String s, int ID){
+		name = s;
+		id=ID;
+		placesMap.put(id, this);
+		placesVector.add(this);
+	}
 	
 	//constructor for initializing variables
 	Place(Scanner infile){

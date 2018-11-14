@@ -62,7 +62,7 @@ public class Game {
 				 }
 				 continue;
 			 }
-			 
+			 Place n = new Place("Exit",1);
 			 //Place newPlace = new Place();
 			 //newPlace.merchantLocations();
 			 
