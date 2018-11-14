@@ -1,3 +1,4 @@
+//manuel torres
 GDF 4.0 Mystic City	- Populated! // Magic word, version number, and Environment name.
 
 PLACES 14	// Fourteen Places in this file
@@ -259,41 +260,41 @@ A large, wide, straight sword made of iron is held by a grip wrapped in ordinary
 One sharp edge makes sure this weapon is great for hacking and slashing.
 
 -99
-2		14		40		Axe
+2		40		14		4		Axe
 2
 A fairly big, thin, sharp blade made of titanium is held by a grip wrapped in gilded, jade green salmon leather.
 This sharp, dual-edged axe makes this weapon the best choice for both cleaving and stabbing your enemies with ferocious power.
 
 -99
-3		13		38		Staff
+3		38		13		6		Staff
 2
 160 centimeters (62 inches) of solid mangrove wood form the base of this magnificent staff. 
 Rows upon rows of small gems cover the simple, straight staff except for the handle, which has been decorated with small carved runes.
 
 -99
-4		10		32		Mace
+4		32		10		5		Mace
 2
 This mace from another time seems to always be whispering secrets to you. 
 Too bad they are in another language.
 
 -99
-5		9		30		Bow and Arrow
+5		30		9		7		Bow and Arrow
 2
 This well-made composite bow has been delicately constructed of excellent ipe wood. 
 Its string is made from pristine hemp, it's a very rare material around these parts of the world.
 
 -99
-6		11		35		Spear
+6		35		11		5		Spear
 1
 It is said to be so sharp that a dragonfly landing on the edge would be instantly cut in half.
 
 -99
-7		5		25		Dagger
+7		25		5		10		Dagger
 2
 A fairly short, slim, jagged blade made of titanium is held by a grip wrapped in dull, royal blue scaled leather.
 With a single, sharp edge this weapon is ideal for both cleaving enemies as well as blocking their attacks.
 
 -99
-8	 	3		15		Rock
+8	 	15		3		4		Rock
 1
 A fairy medium, fairly heavy, sized rock that could be used to bludgeon people with. 

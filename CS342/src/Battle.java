@@ -1,5 +1,7 @@
+//manuel torres
 import java.util.Random;
 import java.util.Scanner;
+
 enum battleType{
 	  StrongAttack("Strong","strong","Strong Attack"),MediumAttack("Medium","medium","Medium Attack"),
 	  WeakAttack("Weak","weak","Weak Attack"), Defend("Defend", "defend", "DEFEND"), Run("Run","Runaway","run");
@@ -20,19 +22,14 @@ enum battleType{
 		return false;
 	}
 }
-public class Battle {
-	
-	
-	
-	
+
+public class Battle {	
 	Random rand=new Random();
 	private Character fighter1;
 	private Character fighter2;
 	private Artifact weapon1;
 	private Artifact weapon2;
 	private static Battle battle;
-	
-	
 	
 	Battle(){
 		battle=null;
@@ -56,8 +53,7 @@ public class Battle {
 		return false;
 	}
 	
-	
-	void battle(Character c1, Character c2, boolean pvp) {
+	void battle(Character c1, Character c2) {
 		fighter1=c1;
 		fighter2=c2;
 		battleType m1 = battleType.Run;
@@ -69,7 +65,7 @@ public class Battle {
 		String w = input.next();
 		weapon1=fighter1.getArtifact(w);
 		
-		if(pvp) {
+		if(c2 instanceof Player ) {
 		System.out.println(fighter2.name() + " what weapon would you like to use.");
 		fighter2.printInventory();
 		input = new Scanner(System.in);
@@ -77,11 +73,11 @@ public class Battle {
 		weapon1=fighter2.getArtifact(w);
 		}
 		else {
-			
+			weapon2=fighter2.getLargestWeapon();
 		}
 		
 		
-		while(fighter1.alive() && fighter2.alive()) {
+		while(fighter1.alive() && fighter2.alive()) { // shouldn't this be 'or' because the fight ends when one character dies
 			m1=fighter1.decision.getAttack(fighter1);
 			m1=fighter2.decision.getAttack(fighter2);
 			int move1 = evalMove(fighter1,m1, weapon1);
@@ -90,8 +86,6 @@ public class Battle {
 			}
 	}
 		
-		
-		
 	int evalMove(Character fighter, battleType m, Artifact w) {
 		int move=0;
 	    int randomNumber = 0;
@@ -99,22 +93,22 @@ public class Battle {
 		case Defend:
 			randomNumber = rand.nextInt(25);
 			fighter.addStamina(25);
-			move = -10 - randomNumber;
+			move = -10 - randomNumber; // come back to this
 			return move;
 		case StrongAttack:
 			randomNumber = rand.nextInt(40);
 			fighter.removeStamina(45);
-			move = fighter.returnBaseAttack() + randomNumber + w.getAttack();
+			//move = fighter.returnBaseAttack() + randomNumber + w.getAttack();
 			return move;
 		case MediumAttack:
 			randomNumber = rand.nextInt(25);
 			fighter1.removeStamina(35);
-			move = fighter.returnBaseAttack() + randomNumber+ w.getAttack();;
+			//move = fighter.returnBaseAttack() + randomNumber+ w.getAttack();;
 			return move;
 		case WeakAttack:
 			randomNumber = rand.nextInt(10);
 			fighter.removeStamina(25);
-			move = fighter.returnBaseAttack() + randomNumber + w.getAttack();;
+			//move = fighter.returnBaseAttack() + randomNumber + w.getAttack();;
 			return move;
 		case Run:
 		
@@ -123,8 +117,6 @@ public class Battle {
 			move=-10;
 			return move;
 		}
-	    
-	    
 	}
 	
 	void executeMove(int m1, int m2) {

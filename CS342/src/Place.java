@@ -1,12 +1,11 @@
+//manuel torres
 import java.util.*;
 
-
 public class Place {
-
 	private int id;//name id
 	private int numOfLines;
 	private int dirCount;//number of directions
-	Random rand=new Random();
+	static Random rand=new Random();
 	private String name;//name of room
 	private String desc=" ";//description of room
 	private static Vector<Place> placesVector=new Vector<Place>();
@@ -14,12 +13,11 @@ public class Place {
 	private Map<String,Artifact> artifacts;
 	public static Map<Integer,Place> placesMap = new HashMap<Integer,Place>();
 	public Map<Integer, Character> characters = new HashMap<Integer,Character>();
-	
+	private Vector<Character> characterVector = new Vector<Character>();
+	Merchant merchant; // merchant reference as to whether there is a merchant in the place or not
 	private static String line;
 	private Scanner lineScanner;
-	
-
-	
+	Battle battle;
 	static private String getCleanLine(String scanner) {
 		int findIndex= line.indexOf("//");
 		if(line.length()>=0 && findIndex==-1) {
@@ -38,6 +36,9 @@ public class Place {
 	
 	//constructor for initializing variables
 	Place(Scanner infile){
+		 //int merchantExists; // when we find out whether the place has a merchant or not we still need to initialize all the other place information
+		 // before passing merchant the place information. The place gets a merchant but also each merchant object gets a place object for which it resides
+		 battle=Battle.getBattle();
 		 directions = new ArrayList<Direction>();
 		 artifacts = new HashMap<String,Artifact>();
 		 while(true) {
@@ -50,6 +51,10 @@ public class Place {
 			}
 		lineScanner = new Scanner(line);
 		id=lineScanner.nextInt();
+		//4.1 code
+		
+
+		//end 4.1 code
 		name=lineScanner.nextLine();
 		name=name.trim();
 		line = infile.nextLine();
@@ -65,6 +70,9 @@ public class Place {
 		}
 		placesMap.put(id, this);
 		placesVector.add(this);
+		
+		merchant = null;
+		
 	}
 	
 	//Getters for each variable
@@ -90,8 +98,6 @@ public class Place {
 		return false;
 	}
 	
-	
-	
 	//adders
 	void addDirection(Direction d) {
 			directions.add(d);
@@ -102,8 +108,8 @@ public class Place {
 	}
 	void addCharacter(int id, Character c) {
 		characters.put(id, c);
+		
 	}
-
 	
 	//removers
 	void removeArtifact(String name) {
@@ -111,40 +117,62 @@ public class Place {
 	}
 	void removeCharacter(int id, Character c) {
 		characters.remove(id, c);
+		characterVector.add(c);
 	}
-
-
-	
-
+	void changeMerchant(Merchant m) {
+		merchant=m;
+	}
 
 	void useKey(Artifact a) {
 		for(Direction d : directions) {
 			d.useKey(a);
 		}
 	}
-
+	void battle() {
+		battle.battle(characterVector.get(0), characterVector.get(1));
+	}
 	Place followDirection(String direction) {
 		
 		//for leap iterating through ever direction looking for a match
-		for(int i=0;i<dirCount;i++) {
-			if(directions.get(i).Match(direction)) 
-				 return directions.get(i).follow();
+		for(Direction d : directions ) {
+			if(d.Match(direction)) 
+				 return d.follow();
 			}
 		System.out.println("You did not move invalid direction");
 		return this;
 	}
 		
+	public void notifyMerchant(Character c){
+		if ( c instanceof Player ) {
+			merchant.greet(c);
+		}
+	}
+	Merchant hasMerchant() {
+		if ( merchant == null ) {
+			return null;
+		}
+		else {
+			return merchant;
+		}
+	}
 	
-	
-	
-	
+	public void merchantLocations() {
+		for ( Map.Entry<Integer, Place> entry: placesMap.entrySet() ) {
+			System.out.println(entry.getValue().hasMerchant() );
+		}
+	}
 	
 	//returns random place for artifacts/players to go
-	Place randomPlace() {
+	static Place randomPlace() {
 		int randomNum=rand.nextInt(placesVector.size());
 		return placesVector.get(randomNum);
 	}
-	
+	boolean emptyRoom() {
+		if(artifacts.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
 	void print() {
 		System.out.println("id: " + id);
 		System.out.println("name: " + name);

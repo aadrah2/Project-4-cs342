@@ -1,4 +1,6 @@
+//manuel torres
 import java.util.Scanner;
+import java.util.*;
 
 public class Artifact {
 	private String name;
@@ -11,9 +13,11 @@ public class Artifact {
 	private Scanner lineScanner;
 	private static String line;
 	private Place currentPlace;
-	private Character currentCharacter;
+	private int numCopies; // number of copies of the named artifact that someone will have 
 	private int attack; 
 	private int defense; 
+	static public Vector<Weapon> weaponVector = new Vector<Weapon>(); 
+	private Character currentCharacter;
 	
 	static private String getCleanLine(String scanner) {
 		int findIndex= line.indexOf("//");
@@ -27,6 +31,17 @@ public class Artifact {
 		line= line.trim();
 		return line;
 	}
+	public Artifact(Artifact b){
+		name = b.name;
+		description = b.description;
+		value = b.value;
+		id = b.id;
+		mobility = b.mobility;
+		roomID = b.roomID;
+		keyPattern = b.keyPattern;
+		currentPlace = b.currentPlace; // ?
+		// don't copy numcopies because we just want to make one	
+	}
 	
 	Artifact(Scanner infile){
 		while(true) {
@@ -37,6 +52,8 @@ public class Artifact {
 			 }
 			break;
 		}
+		numCopies = 0; // excluding the original. when artifact is first made there is that and then whenever someone will do add artifact 
+		// it will call the addCopy of their artifact 
 		lineScanner = new Scanner(line);
 		roomID = lineScanner.nextInt();
 		
@@ -68,8 +85,10 @@ public class Artifact {
 		if(this instanceof Weapon) {
 			for(int i = 0; i < num; i++) {
 				description += infile.nextLine();
+				description += "\n";
 			}
-			return; 
+			
+			return; //not placing weapons around the map, so return 
 		}
 		for(int i=0;i<num; i++) {
 			description+=infile.nextLine();
@@ -85,12 +104,9 @@ public class Artifact {
 		}
 		else {
 			currentCharacter = Character.getCharacterbyId(Math.abs(roomID));
-			currentCharacter.addArtifact(this,name);
-			
+			currentCharacter.addArtifact(this);
 		}
-		
 	}
-	
 	
 	//getters
 	int value() {
@@ -111,8 +127,17 @@ public class Artifact {
 	int id() {
 		return id;
 	}
+	void addCopy() {
+		numCopies++;
+	}
+	void loseCopy() {
+		numCopies--;
+	}
 	int keyPattern() {
 		return keyPattern;
+	}
+	int count() {
+		return numCopies; // returns the number of artifacts that a character has
 	}
 	Place currentPlace() {
 		return currentPlace;
@@ -120,7 +145,6 @@ public class Artifact {
 	Character currentCharacter() {
 		return currentCharacter;
 	}
-	
 	
 	//setters
 	void setCurrentPlace(Place p) {
@@ -133,18 +157,27 @@ public class Artifact {
 	void unlockDirection(Direction d) {
 		d.useKey(this);
 	}
+	public void inventoryPrint() { // same as display but doesn't print out pattern
+		System.out.println("Artifact Name: " + name);
+		System.out.println("Desc:" + description);
+		System.out.println("Value: " + value);
+		System.out.println("Mobility: " + mobility);		
+	}
+	
+	public int getAttack() {
+		return attack; 
+	}
+	
 }
 
 class Weapon extends Artifact{
 	Weapon(Scanner infile){
 		super(infile);
+		weaponVector.add(this);
 	}
 	
-	public Weapon getWeapon(String s, Character c) {
-		return c.artifacts.get(s); 
-	}
+	//public Weapon getWeapon(String s, Character c) {
+		//return c.artifacts.get(s); 
+	//}
 	
-	public int getAttack(String s, Character c) {
-		return c.artifacts.gets(s).attack; 
-	}
-}
+}//end of weapon

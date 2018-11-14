@@ -1,9 +1,11 @@
+//manuel torres
 import java.lang.Enum;
 
 public class Move {
 	public enum moveType{
 		  GO("go","Go","GO"),USE("USE","Use","use"), GET("get","Get","GET"),DROP("DROP" , "Drop", "drop"), EXIT("Exit", "EXIT","exit"), 
-		  QUIT("QUIT","Quit","quit"), INVENTORY("inventory","INVENTORY","Inventory"), LOOK("look","Look","LOOK"),NONE(" ", "NONE","None");
+		  QUIT("QUIT","Quit","quit"), INVENTORY("inventory","INVENTORY","Inventory"), LOOK("look","Look","LOOK"),
+		  MERCHANT("MERCHANT", "Merchant", "merchant"),NONE(" ", "NONE","None");
 
 		private String arg1;
 		private String arg2;
@@ -21,7 +23,6 @@ public class Move {
 			return false;
 		}
 	}
-	
 	public moveType type;
 	
 	public Move getMoveType(String command) {
@@ -40,4 +41,3 @@ public class Move {
 	}
 		
 }
-

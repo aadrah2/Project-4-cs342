@@ -3,12 +3,13 @@
  * aadrah2
  * aadrahta
  */
+//manuel torres
 import java.io.*;
 import java.util.*;
 
 
 public class Tester {
-	
+	//remember to print out username and net ID for all of the programmers
 	public static void main(String[] args) {
 		System.out.println("What would you like to use?");
 		Scanner input = new Scanner(System.in);
