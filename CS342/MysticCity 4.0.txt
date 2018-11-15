@@ -1,40 +1,40 @@
 //manuel torres
 GDF 4.0 Mystic City	- Populated! // Magic word, version number, and Environment name.
 
-PLACES 14	// Fourteen Places in this file
+PLACES 14       // Fourteen Places in this file
 // In this test file, the first 6 room numbers are chosen in an X-Y fashion
 // The tens digit indicates the column and the units digit indicates the row
 
-12 	Entrance Hall	//EH
+12 1     Entrance Hall   //EH
 3
 You are standing in the entrance hall of the great six-room dungeon
 There are doors to the east and north, and a stairway leading down
 The main exit ( from the game ) is to the west
 
-13	Ogre's Lair	// OL
+13 0      Ogre's Lair     // OL
 2
 You have entered the Ogre's Lair!  Better leave before he wakes up . . .
 There are doors to the south and the east
 
-23	Treasure Storeroom	// TS
+23 0     Treasure Storeroom      // TS
 2
 You have found a storeroom full of gold, jewels, and treasure!
 There are doors to the north, south, and east.
 
-22	Pool of Enchantment	// PE
+22 0     Pool of Enchantment     // PE
 4
 You are in a round room with a clear enchanting pool of water.
 There are doors to the north and west.
 There is a slide leading downwards to the floor below.
 You can go down safely, but you might not be able to get back up.
 
-21	Potions Lab		// PL
+21 0     Potions Lab             // PL
 3
 There is a cauldron of thick green goop here, 
 bubbling slowly over a cool blue flame.
 Doors lead to the west and east.
 
-11	Potions Storeroom	// PS
+11 0      Potions Storeroom       // PS
 3
 This room has shelves full of bottles and jars
 Some labels read "Powdered bat's wings" and "Toad eyes".
@@ -45,46 +45,47 @@ There is a door to the east, and a stairway leading up.
 //You need to travel through and back in order to get to the stage 2 of the game,
 //This is why these rooms are in the shape of the number 2
 
-101	Room 101		//C1
+101 1    Room 101                //C1
 2
 This is room 101 of the catacombs
 There are doors to the west and northeast
 
-102	Room 102		//C2
+102 0     Room 102                //C2
 2
 This is room 102 of the catacombs
 There are doors to the southeast and southwest
 
-103	Room 103		//C3
+103 0     Room 103                //C3
 2
 This is room 103 of the catacombs
 There are doors to the east, northwest, and south-southeast
 
-104	Room 104		//C4
+104 0     Room 104                //C4
 2
 This is room 104 of the catacombs
 There are doors to the north-northwest and west-southwest
 
-105	Room 105		//C5
+105 0     Room 105                //C5
 2
 This is room 105 of the catacombs
 There are doors to the east-northeast and south-southwest
 
-106	Room 106		//C6
+106 0    Room 106                //C6
 2
 This is room 106 of the catacombs
 There are doors to the south and north-northeast
 
-107	Room 107		//C7
+107 1    Room 107                //C7
 3
 This is room 107 of the catacombs
 On the wall is written "XYZZY"
 There are doors to the north, south, and east-southeast
 
-108	Room 108		//C8
+108 0     Room 108                //C8
 2
 This is room 108 of the catacombs
 There are doors to the east and west-northwest
+
 
 
 DIRECTIONS 35	//Thirty five directions defined ( No number 15 )

@@ -1,4 +1,3 @@
-
 /*This class is the currency for the game and there can be multiple currencies but for now
  * there's only one, and this class will start off with a child class called Money which will
  * be the physical money each character has
@@ -19,26 +18,24 @@
  * when sold to a merchant. Well, maybe it should be scaled down in the hundreds area.
  */
 public class Currency {
-
-
-	
-	private int value; // this is a percentage value of this currency out of 100, but because there's only
-	// one currency, it will be 100% value. Maybe for some sort of future versions there can be
-	// another currency which would have lower value(70%) for example. Then you can figure out
-	// how much one currency is worth based off its value
-	private String name; // name of the currency 
-	public Currency()
-	{
-		value = 100;
-		name = null;
-	}
-	public Currency(String name, int value) {
-		this.name = name;
-		this.value = value;
-	}
-
-	
-	public int currencyValue() {
-		return value;
-	}
+ 
+    private int value; // this is a percentage value of this currency out of 100, but because there's only
+    // one currency, it will be 100% value. Maybe for some sort of future versions there can be
+    // another currency which would have lower value(70%) for example. Then you can figure out
+    // how much one currency is worth based off its value
+    private String name; // name of the currency 
+    public Currency()
+    {
+        value = 100;
+        name = null;
+    }
+    public Currency(String name, int value) {
+        this.name = name;
+        this.value = value;
+    }
+ 
+     
+    public int currencyValue() {
+        return value;
+    }
 }
