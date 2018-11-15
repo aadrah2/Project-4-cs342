@@ -1,8 +1,11 @@
-//manuel torres
 import java.io.*;
 import java.util.*;
 
+
+
 public class Game {
+
+
 	private String name;//name of game
 	private int numPlaces;//number of places
 	private int numDirections;
@@ -29,6 +32,7 @@ public class Game {
 	}
 	
 	Game(Scanner infile) {
+		 
 		 battle=Battle.getBattle();
 		 while(infile.hasNext()) {
 			 //checking if line is just spaces
@@ -41,6 +45,7 @@ public class Game {
 			 if(line.length()<1) {
 				 continue;
 			 }
+			 
 			 
 			 lineScanner = new Scanner(line);
 			 
@@ -58,11 +63,15 @@ public class Game {
 			 if(lineScanner.next().equals("PLACES")) {
 				 numPlaces= lineScanner.nextInt();
 				 for(int i =0; i < numPlaces; i++) {
-					 Place n = new Place(infile); 
+					 Place n = new Place(infile);
+					 
 				 }
+				 
 				 continue;
 			 }
+			 
 			 Place n = new Place("Exit",1);
+
 			 //Place newPlace = new Place();
 			 //newPlace.merchantLocations();
 			 
@@ -76,29 +85,31 @@ public class Game {
 				 continue;
 			 }
 			 
+			 
 			 lineScanner = new Scanner(line);
 			 //if file version equal to 4.0 then read in characters
-			 if(fileVersion ==4.0) {
-				 if(lineScanner.next().equals("CHARACTERS")) {
-					 int numCharacters = lineScanner.nextInt();
-					 String characterType;
-					 //for loop evaluating character types and initialzing them
-					 for(int i = 0 ; i < numCharacters; i++) {
-						 line=infile.next();
-						 lineScanner=new Scanner(line);
-						 characterType = lineScanner.next();
+			 if(fileVersion == 4.0) {
+			 if(lineScanner.next().equals("CHARACTERS")) {
+				 int numCharacters = lineScanner.nextInt();
+				 String characterType;
+				 //for loop evaluating character types and initialzing them
+				 for(int i = 0 ; i < numCharacters; i++) {
+					 line=infile.next();
+					 lineScanner=new Scanner(line);
+					 characterType = lineScanner.next();
 					 
-						 if(characterType.equals("NPC")) {
-							 Character c =  new NPC(infile);
-							 characters.put(c.id(), c);
-						 }
-						 else {
-							 Character c = new Player(infile);
-							 characters.put(c.id(), c);	 
-						 }
+					 if(characterType.equals("NPC")) {
+						Character c =  new NPC(infile);
+						characters.put(c.id(), c);
 					 }
-					 continue;
+					 else {
+						 Character c = new Player(infile);
+						 characters.put(c.id(), c);
+						 
+					 }
 				 }
+				 continue;
+			 }
 			 }
 			 //for if file does not contain defualt characters
 			 else {
@@ -130,28 +141,32 @@ public class Game {
 			 lineScanner = new Scanner(line);
 			 if(fileVersion >= 4.0) {
 				 if(lineScanner.next().equals("WEAPONS")) {
-					 numWeapons = lineScanner.nextInt(); 
+					 numWeapons = lineScanner.nextInt();
+					 Place newPlace = new Place();
 					 for(int i = 0; i < numWeapons; i++) {
-						 new Weapon(infile);
-					 }//end of for
-				 }//end of if
-			 }//end of if
-		 }//end of while
-	}//end of game constructor
+						 Weapon wp = new Weapon(infile);
+						 newPlace.notifyMerchant_stock(wp);
+					 } // end of for
+				 } // end of if
+			 } // end of if
+		 } // end of while
+	} // end of game constructor
+	
+	
 	
 	
 	//prints all places and their ID's
 	public TreeMap<Integer, Currency> getCurrencies(){
 		return currencies;
 	}
-	
 	void print() {
 		int i=0;
 		Place p=new Place();
 		while(i<numPlaces) {
 			 p.print();
 			i++;
-		}	
+		}
+		
 	}
 	
 	//prints all directions
@@ -163,13 +178,6 @@ public class Game {
 			i++;
 		}
 	}
-	void createMerchants() {
-		for (int i=0;i<8;i++) {
-			Place p = Place.randomPlace();
-			Merchant m = new Merchant(p);
-			p.changeMerchant(m);
-		}
-	}
 	void checkForBattle() {
 		for(Place p : Place.placesMap.values()) {
 			if(p.characters.size()>1) {
@@ -177,16 +185,17 @@ public class Game {
 			}
 		}
 	}
+	
 	//plays game
 	void play() {
 		System.out.println("Welcome to " + name + " Dungeon");
-		createMerchants();
-		
-		while(true) {
-			for(Character c : characters.values()) {
-				c.makeMove();
+		while ( true ) {
+				for(Character c : characters.values()) {
+					c.makeMove();
 			}
-			checkForBattle();
+
 		}
-	}			
-}//end of game
+	}
+			
+	}
+

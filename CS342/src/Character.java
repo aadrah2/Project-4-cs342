@@ -1,4 +1,3 @@
-//manuel torres
 import java.util.*;
 
 
@@ -14,6 +13,7 @@ public class Character {
 	protected Map<String, Artifact> artifacts=new HashMap<String, Artifact>();
 	public DecisionMaker decision;
 	Money money;
+
 	private Map<String,Weapon> weapons = new HashMap<String,Weapon>(); 
 	//variable stats for battle mode
 	protected int health;
@@ -21,8 +21,9 @@ public class Character {
 	private int defense;
 	private int stamina;
 	protected int baseAttack;
-	private Weapon fists;
 	
+	private Weapon fists;
+
 	
 	static private String getCleanLine(String scanner) {
 		int findIndex= line.indexOf("//");
@@ -40,7 +41,6 @@ public class Character {
 	
 	Character(Scanner infile){
 		Place p = new Place();
-		
 		line = infile.nextLine();
 		lineScanner = new Scanner(line);
 		int roomID=lineScanner.nextInt();
@@ -70,7 +70,7 @@ public class Character {
 		defense=0;
 		stamina=100;
 		characters.put(id,this);
-		fists=new Weapon("fists",baseAttack,defense);
+		fists=new Weapon("fists",baseAttack,defense, "Your bare hands");
 		weapons.put("fists", fists);
 	}
 
@@ -82,6 +82,15 @@ public class Character {
 		currentRoom=room;
 		money = new Money();
 
+	}
+	
+	Character(String name){ // primarily used for battle from the menu 
+		this.name = name;
+		alive = true;
+		defense=0;
+		stamina=100;
+		fists=new Weapon("fists",baseAttack,defense, "Your bare hands");
+		weapons.put("fists", fists);
 	}
 	
 	//getters
@@ -154,6 +163,9 @@ public class Character {
 		return true;
 	}
 	
+	
+
+	
 	public boolean balanceSufficient(int value ) { // if value is more than the balance of the player's money, return false. else return true
 		if ( money.balance() < value ) { // if player's balance less than value's they don't have enough moneyh
 			return false;
@@ -192,6 +204,8 @@ public class Character {
 	boolean alive() {
 		return alive;
 	}
+	
+
 	void death() {
 		System.out.println("Characeter " + name + " has died and been removed from game");
 		alive=false;
@@ -213,12 +227,21 @@ public class Character {
 			a.setCurrentPlace(Place.placesMap.get(1).randomPlace());
 		}
 	}
-	void printInventory() {
+
+	void printArtifactInventory() {
 		for (Artifact a: artifacts.values()) {
-			System.out.println("Name: " + a.name() + " Description: " + a.description() + " Base Attack: "+ a.getAttack() );
+			System.out.println("Name: " + a.name() + " / Description : " + a.description() + " / Value:"+ a.value() );
+			System.out.println("Name: " + a.name() + " / Description: " + a.description() + " / Base Attack: "+ a.getAttack() );
+
 		}
 	}
 	
+	void printWeaponInventory() {
+		for (Artifact w: weapons.values()) {
+			System.out.println("Name: " + w.name() + " / Description : " + w.description() + " / Value:"+ w.value() +
+					" / Base Attack: " + w.getAttack()  );
+		}
+	}
 	
 	void addHealth(int num) {
 		health+=num;
@@ -269,21 +292,29 @@ public class Character {
 		}
 		return true;
 	}
+	
 	void addWeapon(String s, Weapon w) {
 		weapons.put(s,w);
 		addArtifact(weapons.get(s));
 	}
+
 	Weapon getWeapon(String s) {
 		if(weapons.containsKey(s)) {
 			return weapons.get(s);
 		}
 		return weapons.get("fists");
 	}
+	
+	int showBalance() { // returns the amount of money the character has
+		return money.balance();
+	}
+	
 	void printStats() {
 		System.out.println("Health: " + health);
 		System.out.println("Defense: " + defense);
 		System.out.println("Stamina: " + stamina);
 	}
+
 	void makeMove() {
 		if(!alive) {
 			return;
@@ -292,6 +323,7 @@ public class Character {
 		while ( m.type == null ) 
 		{
 			System.out.println("What move would you like to do for "+ name + ":");
+			System.out.println("[ GO / LOOK / GET / DROP / USE / INVENTORY / MERCHANT ]");
 			Scanner input = new Scanner(System.in);
 			String command  = input.next();
 			
@@ -303,7 +335,7 @@ public class Character {
 				
 				case GO :
 					String object= input.next();
-					currentRoom.removeCharacter(id, this);
+					currentRoom.removeCharacter(id, this); // msg to group: come back to this
 					currentRoom=currentRoom.followDirection(object);
 					if(currentRoom==null) {
 						exit();
@@ -352,12 +384,20 @@ public class Character {
 					
 				case INVENTORY:
 					System.out.println( name + " Inventory: ");
-					printInventory();
+					printArtifactInventory();
 					makeMove();
 					break;
 				case MERCHANT:
-					currentRoom.notifyMerchant(this);
-
+					boolean answer = currentRoom.notifyMerchant(this);
+					if ( answer == false ) {
+						System.out.println("There is no merchant currently present in this room");
+					}
+					break;
+				case BATTLE:
+					Battle b = Battle.getBattle();
+					b.battlePractice();
+					break;
+					
 				case NONE:
 					break;
 				default:
@@ -366,7 +406,9 @@ public class Character {
 				}	
 			}
 			
-		}	
+		}
+		
+		
 	}
 	
 	public Weapon getLargestWeapon() {
@@ -391,7 +433,7 @@ class NPC extends Character{
 	NPC(Scanner infile){
 		super(infile);
 		decision = new AI();
-		health=200;
+		health=100;
 		baseAttack=30;
 		money = new Money(30);
 
@@ -402,7 +444,8 @@ class NPC extends Character{
 			return;
 		}
 		Move m = decision.getMove(this, this.currentRoom, "Random");
-		
+		System.out.println(super.name() + "'s turn: " );
+
 		switch(m.type) {
 		case GET:
 			if(currentRoom.emptyRoom()) {
@@ -415,22 +458,23 @@ class NPC extends Character{
 				break;
 			}
 			makeMove();
-			break;
+			break;	
 		case DROP:
 			if(emptyBag()) {
 				Artifact A = returnArtifact();
 				removeArtifact(A, A.name());
 				System.out.println(this.name() + " has dropped " + A.name());
 				break;
+
 			}
-			makeMove();
-			break;
+			
 		case USE:
 			if(emptyBag()) {
 				Artifact b = returnArtifact();
 				currentRoom.useKey(b);
 				break;
-			}			
+			}
+							
 			System.out.println("No doors to unlock");
 			makeMove();
 			break;
@@ -456,7 +500,7 @@ class Player extends Character{
 	Player(Scanner infile){
 		super(infile);
 		decision = new UI();
-		health=200;
+		health=100;
 		baseAttack=10;
 		money = new Money(100);
 
@@ -464,10 +508,13 @@ class Player extends Character{
 	Player(int ID, String Name, String Desc, Place room){
 		super(ID,Name,Desc,room);
 		decision = new UI();
-		health=200;
-		baseAttack=30;
+		health=100;
+		baseAttack=10;
 		money = new Money(100);
 
+	}
+	Player(String name){ // primarily used for battle from menu
+		super(name);
 	}
 	
 	
@@ -548,6 +595,5 @@ class AI implements DecisionMaker{
 	}
 	return b;
 }
-	
 	
 }

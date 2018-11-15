@@ -1,9 +1,13 @@
-//manuel torres
 import java.util.*;
 
 public class Merchant{
+
 	private Place place; // each merchant has a place associated with it that will be its locations
 	private Map<String, Artifact> artifactInventory = new HashMap<String, Artifact>();
+
+	public Merchant() {
+		
+	}
 	public Merchant(Place p) 
 	{
 		place = p; // put the merchant in said place
@@ -20,6 +24,7 @@ public class Merchant{
 				artifactInventory.put(a.name(), a);
 			}
 		}
+		
 	}
 	
 	public void stock(Artifact a) { // for all places, if there's a merchant, stock with
@@ -30,7 +35,8 @@ public class Merchant{
 		for ( Map.Entry<Integer, Place> entry:  placeMap.entrySet() ) {
 			Merchant m = entry.getValue().hasMerchant();
 			if ( m != null ) {
-				m.addArtifact(a);
+				Artifact newArtifact = new Artifact(a);
+				m.addArtifact(newArtifact);
 			}
 		}
 	}
@@ -39,28 +45,59 @@ public class Merchant{
 		if ( c instanceof Player == false ){
 			return;
 		}
-		System.out.println("Welcome to the merchant shop! These are our items we have to offer");
-		inventory();
-		System.out.println("What would you like to do, buy, sell, or look?");
-		Scanner userInput = new Scanner(System.in);
-		String choice = userInput.nextLine();
-		
-		if ( choice.equalsIgnoreCase("sell") ) {
-			sell(c);
+		boolean inputProcessed = false;
+		while ( inputProcessed == false ) {
+			System.out.println("Welcome to the merchant shop! These are our items we have to offer");
+			inventory();
+			System.out.println("What would you like to do, buy, sell, or look?");
+			System.out.println("Your balance: $" + c.showBalance() );
 			
+			Scanner userInput = new Scanner(System.in);
+			
+			String choice = userInput.nextLine();
+			
+			if ( choice.equalsIgnoreCase("sell") ) {
+				sell(c);
+				inputProcessed = true;
+			}
+			else if ( choice.equalsIgnoreCase("buy") ) {
+				buy(c);
+				inputProcessed = true;
+			}
+			else if ( choice.equalsIgnoreCase("look") ) {
+				inventory();
+				System.out.println("See anything you like?");
+			}
+			else if (choice.equalsIgnoreCase("leave" ) ) {
+				System.out.println("Thanks for stopping by!");
+				inputProcessed = true;
+				return;
+			}
+			else {
+				System.out.println("I'm sorry. I didn't hear you..");
+			}
 		}
-		else if ( choice.equalsIgnoreCase("buy") ) {
-			buy(c);
-		}
+
+	}
+	
+	public void artifactInformation(Artifact a) {
+			System.out.println("Artifact Name: " + a.name());
+			System.out.println("Desc:" + a.description() );
+			System.out.println("Price: $" + a.value() );
+			System.out.println("Mobility: " + a.mobility() );		
 	}
 	
 	public void inventory() {
 		for ( Map.Entry<String, Artifact> entry: artifactInventory.entrySet() ) {
-			entry.getValue().inventoryPrint();
+			if ( entry.getValue()!= null ) {
+				artifactInformation(entry.getValue() );
+			}
 		}
 	}
 	
-	public void sell(Character c) {
+
+	
+	public void buy(Character c) {
 		if ( c instanceof Player == false) {
 			return;
 		}
@@ -68,8 +105,10 @@ public class Merchant{
 		Scanner scanner = new Scanner(System.in);
 		String line = scanner.nextLine();
 		
+		boolean hasRequestedItem = false;
 		for ( Map.Entry<String, Artifact> entry: artifactInventory.entrySet() ) {
 			if ( line.equalsIgnoreCase(entry.getValue().name() ) ) { // if the merchant has the item
+				hasRequestedItem = true;
 				if ( c.balanceSufficient(entry.getValue().value() ) ) { // if character has enough money
 					c.pay(entry.getValue().value() );
 					//1. if character has item already, then increase the number of copies, which addArtifact handles.
@@ -84,7 +123,8 @@ public class Merchant{
 					else { // if merchant has a copy of the item, decrease the number of copies by one
 						entry.getValue().loseCopy();
 					}
-					System.out.println(entry.getKey() + "has been added to " + c.name() + "'s bag of artifacts");
+					System.out.println(entry.getKey() + " has been added to " + c.name() + "'s bag of artifacts");
+					System.out.println("Remaining balance: $" + c.showBalance() );
 					return;
 					
 				}
@@ -92,17 +132,20 @@ public class Merchant{
 					System.out.println("You do not have enough money to buy that item");		
 				}
 				
-			}
-		
+			}	
+		}
+		if ( hasRequestedItem == false ) {
+			System.out.println("We're sorry, we don't have that item right now.");
 		}
 		return;
 	}
 	
-	public void buy(Character c) {
+	public void sell(Character c) {
 		if ( c instanceof Player == false ) {
 			return;
 		}
 		System.out.println("Which item of yours may I buy?");
+		System.out.println("Your balance: $" + c.showBalance() );
 		Scanner scanner = new Scanner(System.in);
 		String line = scanner.nextLine();
 		
@@ -117,6 +160,8 @@ public class Merchant{
 			c.addMoney(artifact.value() );
 			if ( artifact.count() == 0 ) { // if player has no more copies of said item, remove from player map
 				c.discardArtifactCopies(line);
+				Artifact newArtifact = new Artifact(artifact);
+				addArtifact(newArtifact); // add copy of the artifact so as to avoid copying number of copies of the artifact
 			}
 			else { // if player has a copy of the item, decrease the number of copies by one
 				
@@ -127,6 +172,13 @@ public class Merchant{
 				}
 			}
 			System.out.println("Item has been purchased by the merchant!");
-		}	
+			System.out.println("Remaining balance:  $" + c.showBalance());
+		}
+		
+
+		
 	}
+	
+
+	
 }

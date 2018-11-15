@@ -1,11 +1,14 @@
-//manuel torres
 import java.util.*;
 
+
+
+
 public class Place {
+
 	private int id;//name id
 	private int numOfLines;
 	private int dirCount;//number of directions
-	static Random rand=new Random();
+	Random rand=new Random();
 	private String name;//name of room
 	private String desc=" ";//description of room
 	private static Vector<Place> placesVector=new Vector<Place>();
@@ -14,10 +17,14 @@ public class Place {
 	public static Map<Integer,Place> placesMap = new HashMap<Integer,Place>();
 	public Map<Integer, Character> characters = new HashMap<Integer,Character>();
 	private Vector<Character> characterVector = new Vector<Character>();
+
 	Merchant merchant; // merchant reference as to whether there is a merchant in the place or not
+
 	private static String line;
 	private Scanner lineScanner;
 	Battle battle;
+
+	
 	static private String getCleanLine(String scanner) {
 		int findIndex= line.indexOf("//");
 		if(line.length()>=0 && findIndex==-1) {
@@ -33,6 +40,7 @@ public class Place {
 	Place(){
 		
 	}
+	
 	Place(String s, int ID){
 		name = s;
 		id=ID;
@@ -42,9 +50,10 @@ public class Place {
 	
 	//constructor for initializing variables
 	Place(Scanner infile){
-		 //int merchantExists; // when we find out whether the place has a merchant or not we still need to initialize all the other place information
+		 int merchantExists; // when we find out whether the place has a merchant or not we still need to initialize all the other place information
 		 // before passing merchant the place information. The place gets a merchant but also each merchant object gets a place object for which it resides
-		 battle=Battle.getBattle();
+		 battle = Battle.getBattle();
+
 		 while(true) {
 				line = infile.nextLine();
 				line=getCleanLine(line);
@@ -56,7 +65,7 @@ public class Place {
 		lineScanner = new Scanner(line);
 		id=lineScanner.nextInt();
 		//4.1 code
-		
+		merchantExists = lineScanner.nextInt();
 
 		//end 4.1 code
 		name=lineScanner.nextLine();
@@ -74,9 +83,13 @@ public class Place {
 		}
 		placesMap.put(id, this);
 		placesVector.add(this);
-		
-		merchant = null;
-		
+		if ( merchantExists == 1) {
+			merchant = new Merchant(this);
+			
+		}
+		else {
+			merchant = null;
+		}
 	}
 	
 	//Getters for each variable
@@ -102,6 +115,8 @@ public class Place {
 		return false;
 	}
 	
+	
+	
 	//adders
 	void addDirection(Direction d) {
 			directions.add(d);
@@ -112,8 +127,8 @@ public class Place {
 	}
 	void addCharacter(int id, Character c) {
 		characters.put(id, c);
-		characterVector.add(c);
 	}
+
 	
 	//removers
 	void removeArtifact(String name) {
@@ -122,7 +137,9 @@ public class Place {
 	void removeCharacter(int id, Character c) {
 		characters.remove(id, c);
 		characterVector.remove(c);
+
 	}
+	
 	void changeMerchant(Merchant m) {
 		merchant=m;
 	}
@@ -132,9 +149,10 @@ public class Place {
 			d.useKey(a);
 		}
 	}
-	void battle() {
+	void battle() { //  more of a testing function for battle 
 		battle.battle(characterVector.get(0), characterVector.get(1));
 	}
+
 	Place followDirection(String direction) {
 		
 		//for leap iterating through ever direction looking for a match
@@ -142,13 +160,36 @@ public class Place {
 			if(d.Match(direction)) 
 				 return d.follow();
 			}
-		System.out.println("You did not move invalid direction");
+		System.out.println("You did not move in a valid direction");
 		return this;
 	}
 		
-	public void notifyMerchant(Character c){
+	public boolean notifyMerchant(Character c){
+		//If place has a mechant, return false to indicate so. Otherwise, it has a merchant
+		// and return true after calling the menu options for that merchant
+		if ( merchant == null ) {
+			return false;
+		}
 		if ( c instanceof Player ) {
 			merchant.greet(c);
+			return true;
+		}
+		return false;
+	}
+	
+	public void notifyMerchant_stock(Artifact a) {
+					Merchant m = new Merchant();
+					
+					if ( m != null ) {
+						m.stock(a);
+					}
+	
+	}
+	// can be used as debug function
+	
+	public void merchant_inventory() {
+		if ( merchant != null ) {
+				merchant.inventory();
 		}
 	}
 	Merchant hasMerchant() {
@@ -162,15 +203,16 @@ public class Place {
 	
 	public void merchantLocations() {
 		for ( Map.Entry<Integer, Place> entry: placesMap.entrySet() ) {
-			System.out.println(entry.getValue().hasMerchant() );
+			System.out.println(entry.getValue().hasMerchant() + " :  " + name );
 		}
 	}
 	
 	//returns random place for artifacts/players to go
-	static Place randomPlace() {
+	Place randomPlace() {
 		int randomNum=rand.nextInt(placesVector.size());
 		return placesVector.get(randomNum);
 	}
+	
 	boolean emptyRoom() {
 		if(artifacts.isEmpty()) {
 			return false;

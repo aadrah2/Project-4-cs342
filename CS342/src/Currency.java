@@ -1,5 +1,5 @@
-//manuel torres
-/*This class is the currency for the game and there can be multiple currencies but for nows
+
+/*This class is the currency for the game and there can be multiple currencies but for now
  * there's only one, and this class will start off with a child class called Money which will
  * be the physical money each character has
  * Below is my write up for Currency - Maurice Williams 
@@ -19,6 +19,9 @@
  * when sold to a merchant. Well, maybe it should be scaled down in the hundreds area.
  */
 public class Currency {
+
+
+	
 	private int value; // this is a percentage value of this currency out of 100, but because there's only
 	// one currency, it will be 100% value. Maybe for some sort of future versions there can be
 	// another currency which would have lower value(70%) for example. Then you can figure out

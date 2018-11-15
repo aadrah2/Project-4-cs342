@@ -1,4 +1,4 @@
-//manuel torres
+
 
 public class Money extends Currency {
 

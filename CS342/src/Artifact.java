@@ -1,5 +1,5 @@
-//manuel torres
 import java.util.*;
+
 
 public class Artifact {
 	private String name;
@@ -14,7 +14,7 @@ public class Artifact {
 	private Place currentPlace;
 	private int numCopies; // number of copies of the named artifact that someone will have 
 	private int attack; 
-	private int defense; 
+	private int defense;
 	public static Map<String,Weapon> weapons = new HashMap<String,Weapon>(); 
 	private Character currentCharacter;
 	
@@ -30,10 +30,7 @@ public class Artifact {
 		line= line.trim();
 		return line;
 	}
-	Artifact(String Name, int Attack, int Defense){
-			name = Name;
-			attack=Attack;
-			defense=Defense;
+	Artifact(){
 		
 	}
 	public Artifact(Artifact b){
@@ -45,8 +42,29 @@ public class Artifact {
 		roomID = b.roomID;
 		keyPattern = b.keyPattern;
 		currentPlace = b.currentPlace; // ?
-		// don't copy numcopies because we just want to make one	
+		attack = b.attack;
+		defense = b.defense;
+		
+		// don't copy numcopies because we just want to make one
+		
 	}
+	
+	Artifact(String Name, int Attack, int Defense){
+		name = Name;
+		attack=Attack;
+		defense=Defense;
+	
+}
+	
+	Artifact(String Name, int Attack, int Defense, String description){
+		name = Name;
+		attack=Attack;
+		defense=Defense;
+		this.description = description;
+		
+	
+}
+
 	
 	Artifact(Scanner infile){
 		while(true) {
@@ -90,13 +108,15 @@ public class Artifact {
 		if(this instanceof Weapon) {
 			for(int i = 0; i < num; i++) {
 				description += infile.nextLine();
-				description += "\n";
+				if ( i < num - 1 ) {
+					description += "\n";
+				}
 			}
-			
-			return; //not placing weapons around the map, so return 
+			return; //not placing weapons around the map, so return
 		}
 		for(int i=0;i<num; i++) {
 			description+=infile.nextLine();
+			
 		}
 		
 		Place p = new Place();
@@ -110,8 +130,11 @@ public class Artifact {
 		else {
 			currentCharacter = Character.getCharacterbyId(Math.abs(roomID));
 			currentCharacter.addArtifact(this);
+			
 		}
+		
 	}
+	
 	
 	//getters
 	int value() {
@@ -178,15 +201,44 @@ public class Artifact {
 }
 
 class Weapon extends Artifact{
+	// the standard set of weapons for the entire game, should be public because all characters
+	// should know attainable weapons
+	
+    public Set<Weapon> hash_Set = new HashSet<Weapon>(); 
+
+	Weapon(){
+		
+	}
 	Weapon(Scanner infile){
 		super(infile);
-		weapons.put(this.name(), this);
 	}
-	Weapon(String Name, int Attack, int Defense){
-		super(Name,Attack,Defense);
-	}
+	
+	
 	//public Weapon getWeapon(String s, Character c) {
 		//return c.artifacts.get(s); 
 	//}
 	
+
+	
+	//public int getAttack(String s, Character c) {
+		//return c.artifacts.gets(s).attack; 
+	//}
+	
+	Weapon(String Name, int Attack, int Defense){
+		super(Name,Attack,Defense);
+	}
+	
+	Weapon(String Name, int Attack, int Defense, String description){
+		super(Name,Attack,Defense, description);
+	}
+	
+	public Weapon isStandardWeapon(String source) { // returns the artifact for which contains yielded true
+		Artifact a = new Artifact();
+		for ( Map.Entry<String, Weapon> entry: a.weapons.entrySet() ) { // get the standard set of weapons 
+			if ( source.equalsIgnoreCase(entry.getValue().name() ) ) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
 }//end of weapon

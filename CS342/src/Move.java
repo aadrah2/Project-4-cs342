@@ -1,28 +1,33 @@
-//manuel torres
 import java.lang.Enum;
 
 public class Move {
 	public enum moveType{
-		  GO("go","Go","GO"),USE("USE","Use","use"), GET("get","Get","GET"),DROP("DROP" , "Drop", "drop"), EXIT("Exit", "EXIT","exit"), 
-		  QUIT("QUIT","Quit","quit"), INVENTORY("inventory","INVENTORY","Inventory"), LOOK("look","Look","LOOK"),
-		  MERCHANT("MERCHANT", "Merchant", "merchant"),NONE(" ", "NONE","None");
+		  GO("go","Go","GO", "g"),USE("USE","Use","use", "u"), GET("get","Get","GET", "g"),DROP("DROP" , "Drop", "drop", "d"), EXIT("Exit", "EXIT","exit", "e"), 
+		  QUIT("QUIT","Quit","quit", "q"), INVENTORY("inventory","INVENTORY","Inventory", "i"), LOOK("look","Look","LOOK", "l"),
+		  MERCHANT("MERCHANT", "Merchant", "merchant", "m"), BATTLE("battle", "BATTLE", "Battle", "b"), NONE(" ", "NONE","None", " ");
 
 		private String arg1;
 		private String arg2;
 		private String arg3;
+		private String arg4;
 
-		private moveType(String a, String b, String c) {
+		private moveType(String a, String b, String c, String d) {
 			this.arg1= a;
 			this.arg2= b;
 			this.arg3= c;
+			this.arg4 = d;
 		}
 		private boolean match(String command) {
-			if(arg1.matches(command) ||arg2.matches(command)||arg3.matches(command)  ) {
+			if(arg1.equalsIgnoreCase(command) ||arg2.equalsIgnoreCase(command)||arg3.equalsIgnoreCase(command)
+					|| arg4.equalsIgnoreCase(command)) {
 				return true;
 			}
 			return false;
 		}
 	}
+	
+
+	
 	public moveType type;
 	
 	public Move getMoveType(String command) {
@@ -41,3 +46,4 @@ public class Move {
 	}
 		
 }
+
