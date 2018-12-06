@@ -19,7 +19,8 @@ public class Character {
     private int defense;
     private int stamina;
     protected int baseAttack;
-     
+    IO characterOption = new IO();
+    
     private Weapon fists; // when starting the game this is the weapon that all characters have
  
     static private String getCleanLine(String scanner) {
@@ -86,7 +87,9 @@ public class Character {
         fists=new Weapon("fists",baseAttack,defense, "Your bare hands");
         weapons.put("fists", fists);
     }
-     
+    String description() {
+    	return description;
+    }
     int id() {
         return id;
     }
@@ -228,7 +231,10 @@ public class Character {
     
         }
     }
-     
+    String[][] weapons() {
+    	String w[][] = {weapons.keySet().toArray(new String[0])};
+    	return w;
+    }
     void printWeaponInventory() {
     	System.out.println("Your weapons");
         for (Artifact w: weapons.values()) {
@@ -272,6 +278,12 @@ public class Character {
         if(stamina>0) {
             stamina-=num;
         }
+    }
+    int defense() {
+    	return defense;
+    }
+    int health() {
+    	return health;
     }
     int returnStamina() {
         return stamina;
@@ -320,6 +332,7 @@ public class Character {
         Move m = new Move();
         while ( m.type == null ) 
         {
+        	characterOption.display(3);
             System.out.println("What move would you like to do for "+ name + ":");
             System.out.println("[ GO / LOOK / GET / DROP / USE / INVENTORY / MERCHANT / BATTLE ]");
             Scanner input = new Scanner(System.in);

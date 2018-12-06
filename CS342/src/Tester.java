@@ -5,22 +5,32 @@
  */
 import java.io.*;
 import java.util.*;
- 
- 
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.*; 
+import java.awt.*;
+import java.awt.event.*;
+
+
 public class Tester {
-     
+	static FileChooser f;
+	static IO fileChooser;
     public static void main(String[] args) {
+    	fileChooser = new IO();
+    	
     	System.out.println("Name: Alexander Adrahatas NetId: aadrah");
     	System.out.println("Name: Manuel Torres NetID: mtorre66");
     	System.out.println("Name: Maurice Willams NetID: mwilli96");
-        System.out.println("What would you like to use?");
-        Scanner input = new Scanner(System.in);
-        String filename = input.nextLine();
-        if(args.length>0) {
-            filename=args[0];
-        }
-         
-        Scanner infile=null;
+    	f = new FileChooser();
+        fileChooser.display(3);
+        fileChooser.display(1);
+        fileChooser.GUI2.addListeners(f);
+        
+        
+    }
+    static void startGame(String filename) {
+    	Scanner infile=null;
         try {
             infile=new Scanner(new File(filename));
         }
@@ -31,5 +41,11 @@ public class Tester {
         Game g = new Game(infile);
         g.play();
     }
- 
+ private static class FileChooser implements ActionListener{
+	 public void actionPerformed(ActionEvent e) {
+		 fileChooser.close(1);
+		 String file = e.getActionCommand();
+		 startGame(file);
+	 }
+ }
 }

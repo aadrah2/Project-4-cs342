@@ -1,6 +1,9 @@
-/NPC$AI.class
-/NPC$Player.class
-/NPC$UI.class
-/AI.class
-/Player.class
-/UI.class
+/IO.class
+/UserInterface.class
+/GUI_1.class
+/GUI_2.class
+/Tester$FileChooser.class
+/GUI_3.class
+/GUI_3$BoxHandler.class
+/GUI_3$ButtonHandler.class
+/GUI_4.class

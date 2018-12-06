@@ -1,6 +1,6 @@
 import java.io.*;
 import java.util.*;
- 
+import javax.swing.*;
  
  
 public class Game {
@@ -16,7 +16,7 @@ public class Game {
     private static Map<Integer,Character> characters= new HashMap<Integer,Character>();
     //constructor for initialzing variables
     private static TreeMap<Integer,Currency> currencies= new TreeMap<Integer,Currency>();
- 
+    private IO characterStats;
     //Clean line function
     static private String getCleanLine(String scanner) {
         int findIndex= line.indexOf("//");
@@ -133,7 +133,7 @@ public class Game {
                  }
                  continue;
              }
-              
+             characterStats=new IO();
              Currency c1 = new Currency("dollar", 100);
              int newSize = currencies.size();
              currencies.put(newSize, c1 );
@@ -186,11 +186,15 @@ public class Game {
     //plays game
     void play() {
         System.out.println("Welcome to " + name + " Dungeon");
-       
+
         while ( true ) {
         	for(Character c : characters.values()) {
+        		//characterStats.display(c);
         		c.makeMove();
+                //characterStats.GUI().closeWindow();
             }
         }
-    }             
+    }
+    
+    
 }
