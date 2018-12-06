@@ -1,3 +1,5 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
  
 public class Character {
@@ -319,8 +321,12 @@ public class Character {
         System.out.println("Defense: " + defense);
         System.out.println("Stamina: " + stamina);
     }
- 
-    void makeMove() {
+    void takeTurn() {
+    	characterOption.display(3);
+    	characterOption.GUI4.addListeners(new MoveChooser() );
+    	
+    }
+    void makeMove(String command) {
         /*
          * function that gets the inut from the user as to what move they want to do
          * and does that move. Each case below corresonds with a move from the menu
@@ -331,13 +337,7 @@ public class Character {
         }
         Move m = new Move();
         while ( m.type == null ) 
-        {
-        	characterOption.display(3);
-            System.out.println("What move would you like to do for "+ name + ":");
-            System.out.println("[ GO / LOOK / GET / DROP / USE / INVENTORY / MERCHANT / BATTLE ]");
-            Scanner input = new Scanner(System.in);
-            String command  = input.next();
-             
+        { 
             m=decision.getMove(this, this.currPlace(), command);
             //switch case for evuluating move type 
             if ( m.type!= null )
@@ -345,9 +345,8 @@ public class Character {
                 switch(m.type) {
                  
                 case GO :
-                    String object= input.next();
                     currentRoom.removeCharacter(id, this); // msg to group: come back to this
-                    currentRoom=currentRoom.followDirection(object);
+                    currentRoom=currentRoom.followDirection(command);
                     if(currentRoom==null) {
                         exit();
                         break;
@@ -367,34 +366,31 @@ public class Character {
 	                    }
                     }
 
-                    makeMove();
+                    takeTurn();
                     break;
                      
                 case GET:
-                    object = input.nextLine();
-                    object = object.trim();
-                    if(currentRoom.conatinsArtifact(object) ) {
-                        addArtifact(currentRoom.returnArtifact(object));
-                        currentRoom.removeArtifact(object);
-                        artifacts.get(object).setCurrentCharacter(this);
-                        artifacts.get(object).setCurrentCharacter(null);
-                        System.out.println(name + " has picked up " + object);
+                    if(currentRoom.conatinsArtifact(command) ) {
+                        addArtifact(currentRoom.returnArtifact(command));
+                        currentRoom.removeArtifact(command);
+                        artifacts.get(command).setCurrentCharacter(this);
+                        artifacts.get(command).setCurrentCharacter(null);
+                        System.out.println(name + " has picked up " + command);
                     }
                     else {
-                        System.out.println("That artifact" + object +" is not in the room");
-                        makeMove();
+                        System.out.println("That artifact" + command +" is not in the room");
+                        takeTurn();
                     }
                     break;
                      
                 case DROP:
-                    object= input.next();
-                    if(currentRoom.conatinsArtifact(object)) {
+                    if(currentRoom.conatinsArtifact(command)) {
                         removeArtifact(currentRoom.returnArtifact(object), object);
                         System.out.println(name + " has dropped" + object);
                     }
                     else {
                         System.out.println("This artifact is not in" + name +"s inventory");
-                        makeMove();
+                        TakeTurn();
                     }
                     break;
                      
@@ -448,6 +444,13 @@ public class Character {
         }
         return w; 
     }
+    private class MoveChooser implements ActionListener{
+      	 public void actionPerformed(ActionEvent e) {
+      		 //fileChooser.close(1);
+      		 String command = e.getActionCommand();
+      		 makeMove(command);
+      	 }
+       }
 }
  
 class NPC extends Character{
@@ -638,5 +641,5 @@ class AI implements DecisionMaker{
     }
     return b;
 }
-     
+    
 }

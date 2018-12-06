@@ -6,7 +6,7 @@ import javax.swing.border.EmptyBorder;
 
 
 public class IO {
-  private UserInterface GUIs[];
+  UserInterface GUIs[];
   GUI_1 GUI1=new GUI_1();
   GUI_2 GUI2=new GUI_2();
   GUI_4 GUI4=new GUI_4(); 
@@ -32,29 +32,28 @@ public class IO {
   
 }
 
-class GUI_1 implements UserInterface{
-	JFrame f; 
+class GUI_1 extends JFrame implements UserInterface{
 	JPanel p;
 	
 	public void display() {    
           
 	}
 	public void display(Character c ) {
-		f=new JFrame("What file would you like to choose"); 
-		p=new JPanel();
-		JButton b1 = new JButton("MysticCity 4.0.txt");
-	
-		JButton b2 = new JButton("MysticCity 5.1.txt");
-	
-		p.add(b1);
-		p.add(b2);
-		f.add(p);
-		f.setSize(300,300);    
-	    f.setVisible(true);  
+		
+		String data[][]={ {"101","Amit","670000"},    
+                {"102","Jai","780000"},    
+                {"101","Sachin","700000"}};    
+		String column[]={"ID","NAME","SALARY"};         
+		JTable jt=new JTable(data,column);    
+		jt.setBounds(30,40,200,300);          
+		JScrollPane sp=new JScrollPane(jt);    
+		this.add(sp);          
+		this.setSize(300,400);    
+		this.setVisible(true); 
 		}
 		public void closeWindow() {
-        	f.setVisible(false);
-        	f.dispose();
+        	this.setVisible(false);
+        	this.dispose();
         }
        
     }
@@ -66,17 +65,16 @@ class GUI_2 implements UserInterface{
 	
 	public void display() {
 		f=new JFrame("What file would you like to choose"); 
-		
 		p=new JPanel();
 		JButton b1 = new JButton("MysticCity 4.0.txt");
-		buttons[0]=b1;
+		buttons[0] = b1;
 		JButton b2 = new JButton("MysticCity 5.1.txt");
 		buttons[1]=b2;
 		p.add(b1);
 		p.add(b2);
 		f.add(p);
 		f.setSize(300,300);    
-	    f.setVisible(true);  
+	    f.setVisible(true);
 		}
 	
 	public void addListeners(ActionListener a) {
@@ -85,6 +83,7 @@ class GUI_2 implements UserInterface{
 		}
 	}
 	public void closeWindow() {
+		f.setVisible(false);
 		
     	
     }
@@ -174,7 +173,7 @@ class GUI_3 extends JFrame implements UserInterface{
 class GUI_4 implements UserInterface{
 	JFrame f;
 	JPanel p;
-	public JButton buttons[]=new JButton[2];
+	public JButton buttons[]=new JButton[8];
 	public void display() {
 		f=new JFrame("What Move would you like to make");
 		p=new JPanel();
@@ -186,6 +185,15 @@ class GUI_4 implements UserInterface{
 		JButton b6=new JButton("INVENTORY");
 		JButton b7=new JButton("MERCHANT");
 		JButton b8=new JButton("BATTLE");
+		
+		buttons[0]=b1;
+		buttons[1]=b2;
+		buttons[2]=b3;
+		buttons[3]=b4;
+		buttons[4]=b5;
+		buttons[5]=b6;
+		buttons[6]=b7;
+		buttons[7]=b8;
 		
 		p.add(b1);
 		p.add(b2);

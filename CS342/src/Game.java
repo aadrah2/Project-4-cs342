@@ -189,9 +189,9 @@ public class Game {
 
         while ( true ) {
         	for(Character c : characters.values()) {
-        		//characterStats.display(c);
-        		c.makeMove();
-                //characterStats.GUI().closeWindow();
+        		characterStats.display(c);
+        		c.takeTurn();
+                characterStats.close(0);
             }
         }
     }

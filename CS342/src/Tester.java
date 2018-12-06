@@ -23,7 +23,7 @@ public class Tester {
     	System.out.println("Name: Manuel Torres NetID: mtorre66");
     	System.out.println("Name: Maurice Willams NetID: mwilli96");
     	f = new FileChooser();
-        fileChooser.display(3);
+        //startGame("MysticCity 4.0.txt");
         fileChooser.display(1);
         fileChooser.GUI2.addListeners(f);
         
@@ -43,7 +43,7 @@ public class Tester {
     }
  private static class FileChooser implements ActionListener{
 	 public void actionPerformed(ActionEvent e) {
-		 fileChooser.close(1);
+		 //fileChooser.close(1);
 		 String file = e.getActionCommand();
 		 startGame(file);
 	 }
