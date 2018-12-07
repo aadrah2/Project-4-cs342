@@ -30,6 +30,7 @@ public class Direction {
     private final Place from;//room from
     private final Place to;//room to
     private final dirType dir;// direction
+    private String direction;
     private status access;//accessibility
     private static String line;
     private Scanner lineScanner;
@@ -63,7 +64,8 @@ public class Direction {
         lineScanner = new Scanner(line);
         id=lineScanner.nextInt();
         from = p.getPlaceById( lineScanner.nextInt() );
-        dir=getDirType(lineScanner.next());
+        direction=lineScanner.next();
+        dir=getDirType(direction);
         int toValue = lineScanner.nextInt();
         if(toValue<0) {
             access=status.LOCKED;
@@ -94,7 +96,9 @@ public class Direction {
     dirType returnDir() {
         return dir;
     }
- 
+    String direction() {
+    	return direction;
+    }
     //unlocking door
     void useKey(Artifact a) {
         if(a.keyPattern()==artifactKey) {

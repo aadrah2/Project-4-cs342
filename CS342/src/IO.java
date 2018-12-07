@@ -9,7 +9,7 @@ public class IO {
   UserInterface GUIs[];
   GUI_1 GUI1=new GUI_1();
   GUI_2 GUI2=new GUI_2();
-  GUI_4 GUI4=new GUI_4(); 
+  public GUI_4 GUI4=new GUI_4(); 
   
   IO(){
 	  GUIs=new UserInterface[4];
@@ -92,78 +92,43 @@ class GUI_2 implements UserInterface{
 
 
 class GUI_3 extends JFrame implements UserInterface{
-	  private ArrayList<JCheckBox> boxes = new ArrayList<JCheckBox>();
-	  private ArrayList<JLabel> labels = new ArrayList<JLabel>();
-	 
-	  JSplitPane splitPane;
-	  EmptyBorder border1 = new EmptyBorder(5, 5, 5, 5); // invisible border that gives spacing around text fields
-	  private JPanel leftPanel = new JPanel();
-	  private JPanel rightPanel = new JPanel();
-	  JLabel labelOne = new JLabel();
-	  JLabel labelTwo = new JLabel();
-	  JButton submit = new JButton("Submit");
-	
-	  public GUI_3() {
-		    leftPanel = new JPanel(new GridBagLayout());
-		 
-		 
-		    rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS) ); // output goes down the y axis
-		 
-		    addLabel("Yadayada"); // example of adding a label and the label adds some text. the function 
-		    //addLabel also puts out border invisible space around each text field
-		     
-		    addLabel("Buda buda");
-		 
-		    splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, new JScrollPane(rightPanel));
-		 
-		    add(splitPane);
-		 
-		    addBoxes();
-		    
-		    leftPanel.add(submit); // add the submit button 
-		     
-		  }
-		   
-		  void addLabel(String s) { // adds text to the right panel in label, adds string s
-		      JLabel temp = new JLabel();
-		      temp.setText(s);
-		      temp.setBorder(border1);
-		      labels.add(temp);
-		      rightPanel.add(temp);
-		  }
-		 
-		  void addBoxes() { // function that adds the check boxes 
-		    int i = 0;
-		 
-		    GridBagConstraints gbc = new GridBagConstraints();
-		    gbc.gridwidth = GridBagConstraints.REMAINDER;
-		    for (i = 0; i < 10; i++) {
-		      JCheckBox tempBox = new JCheckBox("word " + i);
-		      boxes.add(tempBox);
-		      leftPanel.add(tempBox, gbc);
-		    }
-		  }
-		   
-		  public void display() {
-			  
-		  }
-		  public void closeWindow() {
-			  
-		  }
-		 
-		  public static void main(String[] args) {
-		    // TODO Auto-generated method stub
-		 
-		    GUI_3 cb = new GUI_3();
-		    cb.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		    cb.pack();
-		    cb.setLocationRelativeTo(null);
-		    //cb.addBoxListeners();
-		 
-		    cb.setVisible(true);
-		  }
-	  
-	  
+	public JButton buttons[];
+	public void display() {
+		
+	}
+	public void closeWindow() {
+		
+	}
+	public void display(Place currentRoom) {
+		buttons=new JButton[currentRoom.directions.size()];
+		//creating new panel and layout
+		Panel p1; 
+		
+		setLayout(new GridLayout(1, 2));
+		
+		add(new Label("Directions:"));
+		
+		p1 = new Panel(new GridLayout(6, 3, 5, 5));
+		int i=0;
+		for(Direction d : currentRoom.directions.values()) {
+			JButton b = new JButton(d.returnDir() +" : "+ d.getTo());
+			p1.add(b);
+			buttons[i]=b;
+			i++;
+		}
+		add(p1);
+
+	    setSize(450, 300);
+	    setVisible(true);
+	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    setTitle("Directions");
+		
+	}
+	public void addItemListeners(ActionListener a) {
+		for(int i=0; i<buttons.length; i++) {
+			buttons[i].addActionListener(a);
+		}
+	}
 }
 
 
@@ -174,6 +139,7 @@ class GUI_4 implements UserInterface{
 	JFrame f;
 	JPanel p;
 	public JButton buttons[]=new JButton[8];
+	JButton b[];
 	public void display() {
 		f=new JFrame("What Move would you like to make");
 		p=new JPanel();
@@ -208,6 +174,17 @@ class GUI_4 implements UserInterface{
 	    f.setVisible(true);
 		
 	}
+	public void displayItems(String[] items) {
+		b=new JButton[items.length];
+		p=new JPanel();
+		f=new JFrame();
+		for(int i = 0; i<items.length; i++) {
+			b[0].setText(items[0]);
+			p.add(b[0]);
+		}
+		f.add(p);
+		
+	}
 	public void closeWindow() {
 		f.setVisible(false);
 		f.disable();
@@ -215,6 +192,11 @@ class GUI_4 implements UserInterface{
 	public void addListeners(ActionListener a) {
 		for(int i=0; i<buttons.length; i++) {
 			buttons[i].addActionListener(a);
+		}
+	}
+	public void addItemListeners(ActionListener a) {
+		for(int i=0; i<buttons.length; i++) {
+			b[i].addActionListener(a);
 		}
 	}
 }

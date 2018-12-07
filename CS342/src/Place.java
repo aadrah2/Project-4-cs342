@@ -152,7 +152,16 @@ public class Place {
     void changeMerchant(Merchant m) {
         merchant=m;
     }
- 
+    String[]  returnStringDirections() {
+    	String[] direction = new String[directions.size()];
+    	int i=0;
+    	for( Map.Entry<Integer, Direction> entry: directions.entrySet()) {
+    		direction[i]=entry.getValue().direction();
+    		i++;
+    	}
+    	return direction;
+    	
+    }
     void useKey(Artifact a) {
         for ( Map.Entry<Integer, Direction> entry: directions.entrySet() ) {
             entry.getValue().useKey(a);

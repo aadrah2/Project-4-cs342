@@ -324,111 +324,8 @@ public class Character {
     void takeTurn() {
     	characterOption.display(3);
     	characterOption.GUI4.addListeners(new MoveChooser() );
-    	
+    	makeMove("NONE");
     }
-    void makeMove(String command) {
-        /*
-         * function that gets the inut from the user as to what move they want to do
-         * and does that move. Each case below corresonds with a move from the menu
-         * and is documented in the move class
-         */
-        if(!alive) { // if character is dead cannot make amove
-            return;
-        }
-        Move m = new Move();
-        while ( m.type == null ) 
-        { 
-            m=decision.getMove(this, this.currPlace(), command);
-            //switch case for evuluating move type 
-            if ( m.type!= null )
-            {
-                switch(m.type) {
-                 
-                case GO :
-                    currentRoom.removeCharacter(id, this); // msg to group: come back to this
-                    currentRoom=currentRoom.followDirection(command);
-                    if(currentRoom==null) {
-                        exit();
-                        break;
-                    }
-                    currentRoom.addCharacter(id, this);
-                    break;
-                     
-                case LOOK:
-                    currentRoom.printDirections();
-                    if(currentRoom.hasMerchant()!= null) {
-                    	System.out.println("There is a merchant in this room!");
-                    }
-                    if ( currentRoom.hasArtifact() ) {
-                    	System.out.println("There are also some artifacts in this room!!");
-                    	for ( Map.Entry<String, Artifact> entry: currentRoom.showVisibleArtifacts().entrySet() ) {
-	                    	entry.getValue().inventoryPrint();
-	                    }
-                    }
-
-                    takeTurn();
-                    break;
-                     
-                case GET:
-                    if(currentRoom.conatinsArtifact(command) ) {
-                        addArtifact(currentRoom.returnArtifact(command));
-                        currentRoom.removeArtifact(command);
-                        artifacts.get(command).setCurrentCharacter(this);
-                        artifacts.get(command).setCurrentCharacter(null);
-                        System.out.println(name + " has picked up " + command);
-                    }
-                    else {
-                        System.out.println("That artifact" + command +" is not in the room");
-                        takeTurn();
-                    }
-                    break;
-                     
-                case DROP:
-                    if(currentRoom.conatinsArtifact(command)) {
-                        removeArtifact(currentRoom.returnArtifact(object), object);
-                        System.out.println(name + " has dropped" + object);
-                    }
-                    else {
-                        System.out.println("This artifact is not in" + name +"s inventory");
-                        TakeTurn();
-                    }
-                    break;
-                     
-                case USE:
-                    object= input.next();
-                    currentRoom.useKey(artifacts.get(object));              
-                    System.out.println("All doors unlocked by key have been unlocked");
-                    break;
-                     
-                case INVENTORY:
-                    System.out.println( name + " Inventory: ");
-                    printArtifactInventory();
-                    makeMove();
-                    break;
-                case MERCHANT:
-                    boolean answer = currentRoom.notifyMerchant(this);
-                    if ( answer == false ) {
-                        System.out.println("There is no merchant currently present in this room");
-                    }
-                    break;
-                case BATTLE:
-                    Battle b = Battle.getBattle();
-                    b.battlePractice();
-                    break;
-                     
-                case NONE:
-                    break;
-                default:
-                    System.out.println("Not a correct command..");
-                    break;
-                }   
-            }
-             
-        }
-         
-         
-    }
-     
     public Weapon getLargestWeapon() {
         int size = weapons.size();
         int index = 0; 
@@ -444,13 +341,113 @@ public class Character {
         }
         return w; 
     }
+
+	void makeMove(String command) {
+		/*
+		 * function that gets the inut from the user as to what move they want to do and
+		 * does that move. Each case below corresonds with a move from the menu and is
+		 * documented in the move class
+		 */
+		if (!alive) { // if character is dead cannot make amove
+			return;
+		}
+		Move m = new Move();
+		while (m.type == null) {
+			m = decision.getMove(this, this.currPlace(), command);
+			// switch case for evaluating move type
+			if (m.type != null) {
+				switch (m.type) {
+
+				case GO:
+					characterOption.GUI4.displayItems(currentRoom.returnStringDirections());
+					
+					break;
+
+				case LOOK:
+					currentRoom.printDirections();
+					if (currentRoom.hasMerchant() != null) {
+						System.out.println("There is a merchant in this room!");
+					}
+					if (currentRoom.hasArtifact()) {
+						System.out.println("There are also some artifacts in this room!!");
+						for (Map.Entry<String, Artifact> entry : currentRoom.showVisibleArtifacts().entrySet()) {
+							entry.getValue().inventoryPrint();
+						}
+					}
+
+					takeTurn();
+					break;
+
+				case GET:
+					if (currentRoom.conatinsArtifact(command)) {
+						addArtifact(currentRoom.returnArtifact(command));
+						currentRoom.removeArtifact(command);
+						artifacts.get(command).setCurrentCharacter(this);
+						artifacts.get(command).setCurrentCharacter(null);
+						System.out.println(name + " has picked up " + command);
+					} else {
+						System.out.println("That artifact" + command + " is not in the room");
+						takeTurn();
+					}
+					break;
+
+				case DROP:
+					if (currentRoom.conatinsArtifact(command)) {
+						removeArtifact(currentRoom.returnArtifact(object), object);
+						System.out.println(name + " has dropped" + object);
+					} else {
+						System.out.println("This artifact is not in" + name + "s inventory");
+						takeTurn();
+					}
+					break;
+
+				case USE:
+					object = input.next();
+					currentRoom.useKey(artifacts.get(object));
+					System.out.println("All doors unlocked by key have been unlocked");
+					break;
+
+				case INVENTORY:
+					System.out.println(name + " Inventory: ");
+					printArtifactInventory();
+					makeMove();
+					break;
+				case MERCHANT:
+					boolean answer = currentRoom.notifyMerchant(this);
+					if (answer == false) {
+						System.out.println("There is no merchant currently present in this room");
+					}
+					break;
+				case BATTLE:
+					Battle b = Battle.getBattle();
+					b.battlePractice();
+					break;
+				default:
+					break;
+				}
+			}
+
+		}
+
+	}
     private class MoveChooser implements ActionListener{
       	 public void actionPerformed(ActionEvent e) {
-      		 //fileChooser.close(1);
       		 String command = e.getActionCommand();
       		 makeMove(command);
       	 }
        }
+    private class Directions implements ActionListener{
+     	 public void actionPerformed(ActionEvent e) {
+     		 String command = e.getActionCommand();
+     		currentRoom.removeCharacter(id, this); // msg to group: come back to this
+			currentRoom = currentRoom.followDirection(command);
+			if (currentRoom == null) {
+				exit();
+				break;
+			}
+			currentRoom.addCharacter(id, this);
+     	 }
+      }
 }
  
 class NPC extends Character{
